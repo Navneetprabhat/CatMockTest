@@ -1,10 +1,10 @@
 # CAT Mock Lab
 
-CAT Mock Lab is a static browser prototype for taking CAT-style mock tests. It includes sample tests, private JSON uploads, timed section attempts, optional confidence mapping, attempt history, result analysis, and downloadable JSON reports.
+CAT Mock Lab is a static browser prototype for focused CAT-style practice. It keeps the core loop simple: start a mock, attempt it without distractions, review the result, and upload a tighter custom set when needed.
 
 ## Features
 
-- Dashboard with attempt metrics, best score, average time per question, and confidence usage.
+- Practice desk with attempt metrics, best score, average time per question, and confidence usage.
 - Sample CAT mini mock covering VARC, DILR, and QA.
 - JSON upload flow with validation before a custom test can start.
 - Section timers and per-question timers.
@@ -21,7 +21,7 @@ Mocktest/
   index.html                         Main app markup
   styles.css                         App styling
   app.js                             App logic, sample test data, validation, timers, scoring
-  question_set_generation_prompt.md  Prompt for generating upload-ready CAT test JSON
+  question_set_generation_prompt.md  Focused prompt for generating upload-ready CAT test JSON
   created_sample_1.json              Example generated question set
 ```
 
@@ -40,7 +40,7 @@ You can also serve the folder with any static file server if preferred.
 ## Using The App
 
 1. Open the app.
-2. Choose **Start a mock** or go to **Sample tests**.
+2. Start the sample mock from the **Practice** screen or upload your own JSON set.
 3. Answer MCQ or TITA questions.
 4. Optionally assign confidence values for answer choices.
 5. Move through sections and submit the test.
@@ -80,7 +80,7 @@ Each question should include:
 - `topic`: topic label
 - `options`: required for MCQ questions
 
-For generating upload-ready tests, use `question_set_generation_prompt.md`.
+For generating focused upload-ready tests, use `question_set_generation_prompt.md`.
 
 ## Data Storage
 
