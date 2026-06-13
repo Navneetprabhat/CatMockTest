@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CAT Mock Lab</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">CM</div>
+          <div>
+            <strong>CAT Mock Lab</strong>
+            <span>Focused mocks. Clear review.</span>
+          </div>
+        </div>
+
+        <nav class="nav-list" aria-label="Primary">
+          <button class="nav-item active" data-view="dashboard">Practice</button>
+          <button class="nav-item" data-view="upload">Upload</button>
+          <button class="nav-item" data-view="history">History</button>
+        </nav>
+      </header>
+
+      <main class="main">
+        <section class="view active" id="dashboard-view">
+          <div class="page-header">
+            <div>
+              <span class="eyebrow">Practice desk</span>
+              <h1>Start fast. Stay focused. Review honestly.</h1>
+              <p>Pick one mock, answer without distractions, then review score, timing, confidence, and mistakes in one place.</p>
+            </div>
+            <button class="secondary-action" data-view-target="upload">Upload JSON</button>
+          </div>
+
+          <div class="metrics-grid">
+            <article class="metric-card">
+              <span>Attempts</span>
+              <strong id="metric-attempts">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>Best score</span>
+              <strong id="metric-best">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>Avg time/question</span>
+              <strong id="metric-time">0s</strong>
+            </article>
+            <article class="metric-card">
+              <span>Confidence used</span>
+              <strong id="metric-confidence">0%</strong>
+            </article>
+          </div>
+
+          <div class="focus-grid">
+            <section class="content-band">
+              <div class="section-heading">
+                <div>
+                  <span class="eyebrow">Next action</span>
+                  <h2>Take the sample mock</h2>
+                </div>
+              </div>
+              <div id="featured-test" class="test-list"></div>
+            </section>
+
+            <section class="content-band quiet-band">
+              <div class="section-heading">
+                <div>
+                  <span class="eyebrow">Workflow</span>
+                  <h2>Simple loop</h2>
+                </div>
+              </div>
+              <ol class="focus-steps">
+                <li><strong>Attempt</strong><span>Use section timers and mark only what needs review.</span></li>
+                <li><strong>Reflect</strong><span>Check accuracy, time, and confidence mismatches.</span></li>
+                <li><strong>Repeat</strong><span>Upload a tighter custom set for the next session.</span></li>
+              </ol>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="library-view">
+          <div class="page-header compact">
+            <div>
+              <span class="eyebrow">Available mocks</span>
+              <h1>Choose one test.</h1>
+            </div>
+          </div>
+          <div id="sample-tests" class="test-grid"></div>
+        </section>
+
+        <section class="view" id="upload-view">
+          <div class="page-header compact">
+            <div>
+              <span class="eyebrow">Custom practice</span>
+              <h1>Upload a complete JSON mock.</h1>
+              <p>Use a focused file with sections, questions, answers, marks, and timers. The file stays in this browser.</p>
+            </div>
+          </div>
+
+          <div class="upload-layout">
+            <label class="upload-drop">
+              <input id="json-upload" type="file" accept="application/json,.json" />
+              <span class="upload-icon">JSON</span>
+              <strong>Choose file</strong>
+              <small>Validation appears before the test can start.</small>
+            </label>
+            <div class="section-heading">
+              <h2>Validation</h2>
+              <button id="load-template" class="ghost-action">Show sample format</button>
+            </div>
+            <div id="validation-output" class="validation-output empty-state">No file selected yet.</div>
+          </div>
+        </section>
+
+        <section class="view" id="history-view">
+          <div class="page-header compact">
+            <div>
+              <span class="eyebrow">Past attempts</span>
+              <h1>Review what happened.</h1>
+            </div>
+          </div>
+          <div id="history-list" class="history-list"></div>
+        </section>
+
+        <section class="view test-mode" id="attempt-view" aria-live="polite">
+          <div class="test-topbar">
+            <div>
+              <span class="eyebrow" id="attempt-label">Attempt</span>
+              <h1 id="attempt-title">Mock test</h1>
+            </div>
+            <div class="timer-cluster">
+              <div>
+                <span>Section time</span>
+                <strong id="section-timer">00:00</strong>
+              </div>
+              <div>
+                <span>Question time</span>
+                <strong id="question-timer">0s</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="test-layout">
+            <section class="question-panel">
+              <div class="question-meta">
+                <span id="section-name">VARC</span>
+                <span id="question-position">Question 1 of 1</span>
+                <span id="question-type">MCQ</span>
+              </div>
+              <h2 id="question-text"></h2>
+              <div id="option-list" class="option-list"></div>
+              <div id="tita-box" class="tita-box hidden">
+                <label for="tita-answer">Numeric answer</label>
+                <input id="tita-answer" type="text" inputmode="decimal" placeholder="Enter answer" />
+              </div>
+
+              <div id="confidence-panel" class="confidence-panel hidden">
+                <div class="section-heading">
+                  <h3>Confidence map</h3>
+                  <button id="clear-confidence" class="ghost-action">Clear</button>
+                </div>
+                <p>Optional. Use it only when you want to compare instinct against final choice.</p>
+                <div id="confidence-controls" class="confidence-controls"></div>
+                <div class="confidence-total" id="confidence-total">Total: 0%</div>
+              </div>
+
+              <div class="question-actions">
+                <button id="clear-response" class="secondary-action">Clear response</button>
+                <button id="toggle-review" class="secondary-action">Mark for review</button>
+                <button id="save-next" class="primary-action">Save and next</button>
+              </div>
+            </section>
+
+            <aside class="palette-panel">
+              <div class="section-tabs" id="section-tabs"></div>
+              <div class="palette-legend">
+                <span><i class="legend answered"></i>Answered</span>
+                <span><i class="legend review"></i>Review</span>
+                <span><i class="legend current"></i>Current</span>
+              </div>
+              <div id="question-palette" class="question-palette"></div>
+              <div class="palette-actions">
+                <button id="next-section" class="secondary-action">Move to next section</button>
+                <button id="submit-test" class="danger-action">Submit test</button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="results-view">
+          <div class="page-header compact">
+            <div>
+              <span class="eyebrow">Analysis</span>
+              <h1 id="result-title">Result</h1>
+              <p id="result-subtitle"></p>
+            </div>
+            <button id="download-report" class="primary-action">Download JSON report</button>
+          </div>
+          <div id="result-summary" class="metrics-grid"></div>
+          <div class="analysis-layout">
+            <section class="content-band">
+              <div class="section-heading">
+                <h2>Question review</h2>
+              </div>
+              <div id="question-review" class="review-list"></div>
+            </section>
+            <aside class="insight-panel">
+              <h2>Insights</h2>
+              <div id="insight-list"></div>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>
