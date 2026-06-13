@@ -17,8 +17,8 @@ CAT Mock Lab is a static browser prototype for focused CAT-style practice. It ke
 ## Project Files
 
 ```text
+index.html                           GitHub Pages entry point
 Mocktest/
-  index.html                         Main app markup
   styles.css                         App styling
   app.js                             App logic, sample test data, validation, timers, scoring
   question_set_generation_prompt.md  Focused prompt for generating upload-ready CAT test JSON
@@ -29,13 +29,13 @@ Mocktest/
 
 This is a plain HTML, CSS, and JavaScript app. No build step is required.
 
-Open `index.html` directly in a browser:
+Open the root `index.html` directly in a browser:
 
 ```text
-Mocktest/index.html
+index.html
 ```
 
-You can also serve the folder with any static file server if preferred.
+For GitHub Pages, publish from the repository root so GitHub Pages serves this root `index.html`. The page loads its CSS and JavaScript from the `Mocktest/` folder.
 
 ## Using The App
 
