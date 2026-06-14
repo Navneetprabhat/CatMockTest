@@ -125,66 +125,77 @@
           <div id="history-list" class="history-list"></div>
         </section>
 
-        <section class="view test-mode" id="attempt-view" aria-live="polite">
-          <div class="test-topbar">
-            <div>
-              <span class="eyebrow" id="attempt-label">Attempt</span>
-              <h1 id="attempt-title">Mock test</h1>
-            </div>
-            <div class="timer-cluster">
-              <div>
-                <span>Section time</span>
-                <strong id="section-timer">00:00</strong>
-              </div>
-              <div>
-                <span>Question time</span>
-                <strong id="question-timer">0s</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="test-layout">
-            <section class="question-panel">
-              <div class="question-meta">
-                <span id="section-name">VARC</span>
-                <span id="question-position">Question 1 of 1</span>
-                <span id="question-type">MCQ</span>
-              </div>
-              <h2 id="question-text"></h2>
-              <div id="option-list" class="option-list"></div>
-              <div id="tita-box" class="tita-box hidden">
-                <label for="tita-answer">Numeric answer</label>
-                <input id="tita-answer" type="text" inputmode="decimal" placeholder="Enter answer" />
+        <section class="view test-mode cat-mode" id="attempt-view" aria-live="polite">
+          <div class="cat-frame">
+            <div class="cat-main">
+              <div class="cat-topline">
+                <div class="section-tabs" id="section-tabs"></div>
+                <div class="cat-help">?</div>
               </div>
 
-              <div id="confidence-panel" class="confidence-panel hidden">
-                <div class="section-heading">
-                  <h3>Confidence map</h3>
-                  <button id="clear-confidence" class="ghost-action">Clear</button>
+              <div class="cat-section-bar">
+                <div>
+                  <strong>Sections</strong>
+                  <span class="section-chip active" id="section-name">VARC</span>
                 </div>
-                <p>Optional. Use it only when you want to compare instinct against final choice.</p>
-                <div id="confidence-controls" class="confidence-controls"></div>
-                <div class="confidence-total" id="confidence-total">Total: 0%</div>
+                <div class="timer-cluster">
+                  <span>Time Left :</span>
+                  <strong id="section-timer">00:00</strong>
+                  <small>Question: <b id="question-timer">0s</b></small>
+                </div>
               </div>
 
-              <div class="question-actions">
-                <button id="clear-response" class="secondary-action">Clear response</button>
-                <button id="toggle-review" class="secondary-action">Mark for review</button>
-                <button id="save-next" class="primary-action">Save and next</button>
+              <div class="marks-strip" id="marks-line">Marks for correct answer: 3 | Negative Marks: 1</div>
+
+              <div class="test-layout">
+                <section class="passage-panel" id="passage-panel">
+                  <p class="instruction-copy" id="question-instruction"></p>
+                  <h2 id="passage-title"></h2>
+                  <div id="passage-text" class="passage-text"></div>
+                </section>
+
+                <section class="question-panel">
+                  <div class="question-meta">
+                    <strong id="question-position">Question No. 1</strong>
+                    <span id="question-type">MCQ</span>
+                  </div>
+                  <h2 id="question-text"></h2>
+                  <div id="option-list" class="option-list"></div>
+                  <div id="tita-box" class="tita-box hidden">
+                    <label for="tita-answer">Type in your answer</label>
+                    <input id="tita-answer" type="text" inputmode="decimal" placeholder="Enter answer" />
+                  </div>
+                  <div id="confidence-panel" class="hidden">
+                    <button id="clear-confidence" type="button">Clear confidence</button>
+                    <div id="confidence-controls"></div>
+                    <div id="confidence-total">Total: 0%</div>
+                  </div>
+                </section>
               </div>
-            </section>
+
+              <div class="cat-footer">
+                <div class="question-actions">
+                  <button id="toggle-review" class="secondary-action">Mark for Review &amp; Next</button>
+                  <button id="clear-response" class="secondary-action">Clear Response</button>
+                </div>
+                <button id="save-next" class="primary-action">Save &amp; Next</button>
+              </div>
+            </div>
 
             <aside class="palette-panel">
-              <div class="section-tabs" id="section-tabs"></div>
-              <div class="palette-legend">
-                <span><i class="legend answered"></i>Answered</span>
-                <span><i class="legend review"></i>Review</span>
-                <span><i class="legend current"></i>Current</span>
+              <div class="status-grid">
+                <span><b class="status-badge answered" id="answered-count">0</b>Answered</span>
+                <span><b class="status-badge not-answered" id="not-answered-count">0</b>Not Answered</span>
+                <span><b class="status-badge not-visited" id="not-visited-count">0</b>Not Visited</span>
+                <span><b class="status-badge review" id="review-count">0</b>Marked for Review</span>
+                <span class="wide"><b class="status-badge answered-review" id="answered-review-count">0</b>Answered &amp; Marked for Review</span>
               </div>
+              <h2 id="palette-section-title">VARC</h2>
+              <strong class="palette-title">Choose a Question</strong>
               <div id="question-palette" class="question-palette"></div>
               <div class="palette-actions">
-                <button id="next-section" class="secondary-action">Move to next section</button>
-                <button id="submit-test" class="danger-action">Submit test</button>
+                <button id="next-section" class="secondary-action">Next Section</button>
+                <button id="submit-test" class="primary-action">Submit</button>
               </div>
             </aside>
           </div>

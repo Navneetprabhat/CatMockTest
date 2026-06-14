@@ -1,131 +1,223 @@
-# Focused CAT Mock JSON Generator Prompt
+# CAT Actual-Pattern Mock JSON Generator Prompt
 
-You are an expert CAT exam question setter and strict JSON formatter. Create one upload-ready CAT-style mock test for the CAT Mock Lab app.
+You are an expert CAT question setter and strict JSON formatter. Create one complete upload-ready JSON mock for the CAT Mock Lab app.
 
 Return only raw JSON. Do not include markdown, comments, explanations outside JSON, or trailing commas.
 
-## Goal
+Save generated sample mocks under `Mocktest/sample-mocktests/`. Save previous-year-style papers under `Mocktest/previous-year-papers/`.
 
-Generate a focused practice set that is easy to attempt and useful to review. Keep wording direct, avoid unnecessary story text, and make every question test one clear skill.
+## Required Paper Pattern
 
-Use this configuration:
+Generate exactly:
 
-- VARC questions: [NUMBER]
-- DILR questions: [NUMBER]
-- QA questions: [NUMBER]
-- Total duration: [NUMBER] minutes
-- Difficulty: [easy / moderate / hard / mixed]
-- Purpose: [quick drill / sectional practice / full mock / weak-area repair]
+- VARC: 24 questions
+- DILR: 20 questions
+- QA: 22 questions
+- Total: 66 questions
+- Duration: 120 minutes
+- Section duration: 40 minutes each
+- Scoring: `marks` = `3`; MCQ `negativeMarks` = `-1`; TITA `negativeMarks` = `0`
 
 ## Required Root Structure
 
 ```json
 {
-  "title": "Focused CAT Practice Set",
-  "description": "Short description of the test purpose.",
-  "durationMinutes": 60,
-  "sections": [
-    {
-      "id": "varc",
-      "name": "VARC",
-      "durationMinutes": 20,
-      "questions": []
-    },
-    {
-      "id": "dilr",
-      "name": "DILR",
-      "durationMinutes": 20,
-      "questions": []
-    },
-    {
-      "id": "qa",
-      "name": "QA",
-      "durationMinutes": 20,
-      "questions": []
-    }
-  ]
+  "id": "sample-cat-actual-pattern",
+  "title": "CAT Full Mock - Actual Pattern",
+  "description": "A full-length CAT-style mock with 24 VARC, 20 DILR, and 22 QA questions.",
+  "durationMinutes": 120,
+  "sections": []
 }
 ```
 
-## Required Section Rules
+## Required Sections
 
-Each section must include:
+Create exactly three sections in this order:
 
-- `id`: lowercase unique section id, such as `"varc"`, `"dilr"`, or `"qa"`
-- `name`: short display name
-- `durationMinutes`: number
-- `questions`: non-empty array
+```json
+[
+  {
+    "id": "varc",
+    "name": "VARC",
+    "durationMinutes": 40,
+    "instruction": "Read the question carefully and choose the best answer.",
+    "passages": [],
+    "questions": []
+  },
+  {
+    "id": "dilr",
+    "name": "DILR",
+    "durationMinutes": 40,
+    "instruction": "Study the data given on the left and answer the question.",
+    "sets": [],
+    "questions": []
+  },
+  {
+    "id": "qa",
+    "name": "QA",
+    "durationMinutes": 40,
+    "instruction": "Solve the question and choose the best answer. For TITA questions, type the exact answer.",
+    "questions": []
+  }
+]
+```
 
-The sum of all section `durationMinutes` values must equal root `durationMinutes`.
+## VARC Structure
 
-## Required Question Schema
+VARC must have 24 questions.
+
+Use this mix unless asked otherwise:
+
+- 4 reading comprehension passages
+- 4 questions per passage, for 16 RC questions
+- 8 verbal ability questions, such as para summary, para jumble, odd sentence, sentence completion, or vocabulary-in-context
+
+Each passage must be stored once in `sections[0].passages`.
+
+Passage object format:
+
+```json
+{
+  "id": "varc-p1",
+  "title": "Passage 1: Short Topic Title",
+  "instruction": "The passage below is accompanied by four questions. Based on the passage, choose the best answer for each question.",
+  "text": "Full passage text in plain text."
+}
+```
+
+Each RC question must reference the passage:
+
+```json
+{
+  "id": "v1",
+  "type": "mcq",
+  "passageId": "varc-p1",
+  "text": "Question text",
+  "options": ["Option A", "Option B", "Option C", "Option D"],
+  "correctAnswer": "A",
+  "explanation": "Concise explanation.",
+  "marks": 3,
+  "negativeMarks": -1,
+  "topic": "Reading Comprehension"
+}
+```
+
+For non-RC VARC questions, do not use `passageId`. Include an `instruction` field that states the task.
+
+## DILR Structure
+
+DILR must have 20 questions.
+
+Use 4 sets or caselets with 5 questions each unless asked otherwise.
+
+Each set must be stored once in `sections[1].sets`.
+
+Set object format:
+
+```json
+{
+  "id": "dilr-s1",
+  "title": "Set 1: Short Caselet Title",
+  "instruction": "Study the data and answer the questions.",
+  "text": "All required table, arrangement, route, schedule, or tournament data in plain text."
+}
+```
+
+Each set-based question must reference the set:
+
+```json
+{
+  "id": "d1",
+  "type": "mcq",
+  "setId": "dilr-s1",
+  "text": "Question text",
+  "options": ["Option A", "Option B", "Option C", "Option D"],
+  "correctAnswer": "B",
+  "explanation": "Concise explanation.",
+  "marks": 3,
+  "negativeMarks": -1,
+  "topic": "Data Interpretation"
+}
+```
+
+Use a mix of MCQ and TITA. TITA questions must not include `options`.
+
+## QA Structure
+
+QA must have 22 questions.
+
+Use a realistic mix from:
+
+- Arithmetic
+- Algebra
+- Geometry
+- Number system
+- Modern math
+- Time, speed and distance
+- Time and work
+- Profit and loss
+- Percentages
+- Ratio
+- Averages
+- Mixtures
+
+Use both MCQ and TITA. TITA questions must not include `options`.
+
+## Required Question Fields
 
 Every question must include:
 
-- `id`: unique string across the entire test, such as `"v1"`, `"d1"`, or `"q1"`
+- `id`: unique string across the whole test
 - `type`: `"mcq"` or `"tita"`
-- `text`: full question text in plain text
-- `correctAnswer`: option letter for MCQ, exact typed answer for TITA
-- `explanation`: concise review explanation
+- `text`: question text in plain text
+- `correctAnswer`: option letter for MCQ; exact typed answer string for TITA
+- `explanation`: concise solution explanation
 - `marks`: `3`
 - `negativeMarks`: `-1` for MCQ and `0` for TITA
 - `topic`: short topic label
 
-For MCQ questions:
+For MCQ:
 
-- Include `options` as exactly 4 strings in A, B, C, D order.
+- Include exactly 4 options as strings in A, B, C, D order.
 - `correctAnswer` must be `"A"`, `"B"`, `"C"`, or `"D"`.
 
-For TITA questions:
+For TITA:
 
 - Do not include `options`.
 - `correctAnswer` must be a string.
 - Prefer integer or simple decimal answers.
 
-## Focus And Quality Rules
+## Style And Quality Rules
 
-- Make all questions original.
-- Avoid filler introductions, vague context, and excessive wording.
-- Use plain text only. Do not use HTML, Markdown tables, images, or LaTeX.
+- Match CAT-style reasoning, not generic school-drill questions.
+- Keep wording clear and exam-like.
+- Do not use HTML, Markdown tables, images, or LaTeX.
+- Use plain text math, such as `x^2 + y^2 = 25`.
 - If a table is needed, write it plainly inside `text`.
 - Ensure every question has exactly one correct answer.
-- Keep MCQ options plausible and close enough to require thought.
-- Make explanations short but sufficient to verify the answer.
-- Double-check all arithmetic and option mapping.
-- Keep the difficulty consistent with the requested difficulty.
-- Do not include external references or questions requiring images.
+- Make MCQ options plausible and close enough to require thought.
+- Keep explanations accurate and short enough for post-test review.
+- Double-check arithmetic, option mapping, and section counts.
+- Keep every `passageId` and `setId` reference valid.
 
-## Section Guidance
-
-VARC:
-
-- Use concise reading comprehension, inference, para completion, summary, para jumble, or vocabulary-in-context questions.
-- For RC questions, include the passage inside `text`.
-- Keep passages short enough for focused practice unless a full mock is requested.
-
-DILR:
-
-- Use arrangements, tables, sets, routes, games, tournaments, scheduling, or caselets.
-- Put all required data directly in `text`.
-- Avoid large caselets unless several questions intentionally share the same setup.
-
-QA:
-
-- Use arithmetic, algebra, geometry, number systems, modern math, averages, ratio, percentages, profit-loss, or time-speed-distance.
-- Keep calculations test-like, not school-drill simple.
-
-## Output Checklist
+## Final Checklist
 
 Before returning JSON, verify:
 
-- The output is a single JSON object.
-- Root has `title`, `description`, `durationMinutes`, and `sections`.
-- Every section has at least one question.
+- The output is one valid JSON object.
+- It has exactly 3 sections: VARC, DILR, QA.
+- VARC has exactly 24 questions.
+- DILR has exactly 20 questions.
+- QA has exactly 22 questions.
+- Total questions = 66.
+- Duration = 120 minutes.
+- Each section duration = 40 minutes.
 - Every question id is unique.
 - Every MCQ has exactly 4 options.
-- Every MCQ answer is an option letter, not option text.
-- Every TITA answer is a string.
+- Every TITA has no `options` field.
+- Every RC question has a valid `passageId`.
+- Every DILR set question has a valid `setId`.
 - Every question includes `marks`, `negativeMarks`, and `topic`.
 - The JSON can be parsed without edits.
 
-Now generate the complete upload-ready JSON test.
+Now generate the complete upload-ready JSON mock.

@@ -1,4 +1,4 @@
-const sampleTests = [
+const fallbackSampleTests = [
   {
     id: "sample-cat-mini",
     title: "CAT Mini Mock 1",
@@ -104,6 +104,13 @@ const sampleTests = [
   }
 ];
 
+let sampleTests = fallbackSampleTests;
+
+const samplePaperPaths = [
+  { path: "./Mocktest/sample-mocktests/created_sample_1.json", source: "sample" },
+  { path: "./Mocktest/previous-year-papers/previous_year_style_sample_1.json", source: "previous-year" }
+];
+
 const state = {
   activeView: "dashboard",
   uploadedTests: [],
@@ -126,13 +133,16 @@ const els = {
   jsonUpload: document.getElementById("json-upload"),
   validationOutput: document.getElementById("validation-output"),
   loadTemplate: document.getElementById("load-template"),
-  attemptTitle: document.getElementById("attempt-title"),
-  attemptLabel: document.getElementById("attempt-label"),
   sectionTimer: document.getElementById("section-timer"),
   questionTimer: document.getElementById("question-timer"),
   sectionName: document.getElementById("section-name"),
+  paletteSectionTitle: document.getElementById("palette-section-title"),
   questionPosition: document.getElementById("question-position"),
   questionType: document.getElementById("question-type"),
+  questionInstruction: document.getElementById("question-instruction"),
+  passageTitle: document.getElementById("passage-title"),
+  passageText: document.getElementById("passage-text"),
+  marksLine: document.getElementById("marks-line"),
   questionText: document.getElementById("question-text"),
   optionList: document.getElementById("option-list"),
   titaBox: document.getElementById("tita-box"),
@@ -158,14 +168,43 @@ const els = {
   metricAttempts: document.getElementById("metric-attempts"),
   metricBest: document.getElementById("metric-best"),
   metricTime: document.getElementById("metric-time"),
-  metricConfidence: document.getElementById("metric-confidence")
+  metricConfidence: document.getElementById("metric-confidence"),
+  answeredCount: document.getElementById("answered-count"),
+  notAnsweredCount: document.getElementById("not-answered-count"),
+  notVisitedCount: document.getElementById("not-visited-count"),
+  reviewCount: document.getElementById("review-count"),
+  answeredReviewCount: document.getElementById("answered-review-count")
 };
 
-function init() {
+async function init() {
+  await loadSampleTests();
   renderDashboard();
   renderLibrary();
   renderHistory();
   bindEvents();
+}
+
+async function loadSampleTests() {
+  try {
+    const loadedSamples = [];
+    for (const paper of samplePaperPaths) {
+      const path = paper.path;
+      const response = await fetch(path, { cache: "no-store" });
+      if (!response.ok) continue;
+      const sample = await response.json();
+      const errors = validateTest(sample);
+      if (errors.length) {
+        console.warn(`${path} has validation errors:`, errors);
+        continue;
+      }
+      sample.id = sample.id || `sample-${loadedSamples.length + 1}`;
+      sample.source = paper.source;
+      loadedSamples.push(sample);
+    }
+    if (loadedSamples.length) sampleTests = loadedSamples;
+  } catch (error) {
+    console.warn("Using embedded fallback sample because sample paper JSON could not be loaded.", error);
+  }
 }
 
 function bindEvents() {
@@ -189,11 +228,13 @@ function bindEvents() {
   els.titaAnswer.addEventListener("input", () => {
     getCurrentQuestionAttempt().answer = els.titaAnswer.value.trim();
     renderPalette();
+    renderStatusCounts(getSectionQuestions(getCurrentSection()));
   });
 }
 
 function showView(name) {
   state.activeView = name;
+  document.body.classList.toggle("in-attempt", name === "attempt");
   els.views.forEach((view) => view.classList.toggle("active", view.id === `${name}-view`));
   els.navItems.forEach((item) => item.classList.toggle("active", item.dataset.view === name));
   if (name === "dashboard") renderDashboard();
@@ -224,7 +265,12 @@ function renderLibrary() {
 function testCardMarkup(test, wide = false) {
   const questions = countQuestions(test);
   const duration = test.sections.reduce((sum, section) => sum + section.durationMinutes, 0);
-  const source = test.source === "upload" ? "Private upload" : "Sample";
+  const sourceLabels = {
+    upload: "Private upload",
+    sample: "Sample mocktest",
+    "previous-year": "Previous year paper"
+  };
+  const source = sourceLabels[test.source] || "Sample mocktest";
   return `
     <article class="test-card ${wide ? "wide" : ""}">
       <span class="eyebrow">${source}</span>
@@ -256,7 +302,32 @@ function findTest(id) {
 }
 
 function countQuestions(test) {
-  return test.sections.reduce((sum, section) => sum + section.questions.length, 0);
+  return test.sections.reduce((sum, section) => sum + getSectionQuestions(section).length, 0);
+}
+
+function getSectionQuestions(section) {
+  if (Array.isArray(section.questions)) return section.questions;
+  if (!Array.isArray(section.groups)) return [];
+  return section.groups.flatMap((group) => Array.isArray(group.questions) ? group.questions : []);
+}
+
+function getQuestionResource(section, question) {
+  const passage = question.passageId && Array.isArray(section.passages)
+    ? section.passages.find((item) => item.id === question.passageId)
+    : null;
+  const set = question.setId && Array.isArray(section.sets)
+    ? section.sets.find((item) => item.id === question.setId)
+    : null;
+  const resource = passage || set || null;
+  return {
+    title: question.stimulusTitle || resource?.title || "",
+    text: question.stimulusText || resource?.text || "",
+    instruction: question.instruction || resource?.instruction || section.instruction || "Read the question and choose the best answer."
+  };
+}
+
+function getOptionText(option) {
+  return typeof option === "string" ? option : option?.text || "";
 }
 
 function handleUpload(event) {
@@ -293,18 +364,36 @@ function validateTest(test) {
   test.sections.forEach((section, sectionIndex) => {
     if (!section.name) errors.push(`Section ${sectionIndex + 1} is missing a name.`);
     if (!section.durationMinutes) errors.push(`${section.name || `Section ${sectionIndex + 1}`} is missing durationMinutes.`);
-    if (!Array.isArray(section.questions) || !section.questions.length) {
+    const questions = getSectionQuestions(section);
+    if (!questions.length) {
       errors.push(`${section.name || `Section ${sectionIndex + 1}`} must include questions.`);
       return;
     }
-    section.questions.forEach((question, questionIndex) => {
+
+    if (Array.isArray(section.passages)) {
+      section.passages.forEach((passage, passageIndex) => {
+        if (!passage.id) errors.push(`${section.name || "Section"} passage ${passageIndex + 1} is missing id.`);
+        if (!passage.text) errors.push(`${section.name || "Section"} passage ${passageIndex + 1} is missing text.`);
+      });
+    }
+
+    if (Array.isArray(section.sets)) {
+      section.sets.forEach((set, setIndex) => {
+        if (!set.id) errors.push(`${section.name || "Section"} set ${setIndex + 1} is missing id.`);
+        if (!set.text) errors.push(`${section.name || "Section"} set ${setIndex + 1} is missing text.`);
+      });
+    }
+
+    questions.forEach((question, questionIndex) => {
       const label = `${section.name || "Section"} Q${questionIndex + 1}`;
       if (!question.text) errors.push(`${label} is missing text.`);
       if (!["mcq", "tita"].includes(question.type)) errors.push(`${label} has unsupported type.`);
-      if (question.type === "mcq" && (!Array.isArray(question.options) || question.options.length < 2)) errors.push(`${label} needs at least two options.`);
+      if (question.type === "mcq" && (!Array.isArray(question.options) || question.options.length !== 4)) errors.push(`${label} needs exactly four options.`);
       if (question.correctAnswer === undefined) errors.push(`${label} is missing correctAnswer.`);
       if (question.marks === undefined) errors.push(`${label} is missing marks.`);
       if (question.negativeMarks === undefined) errors.push(`${label} is missing negativeMarks.`);
+      if (question.passageId && !section.passages?.some((passage) => passage.id === question.passageId)) errors.push(`${label} references an unknown passageId.`);
+      if (question.setId && !section.sets?.some((set) => set.id === question.setId)) errors.push(`${label} references an unknown setId.`);
     });
   });
   return errors;
@@ -358,7 +447,7 @@ function startAttempt(test) {
 
 function buildResponseShell(test) {
   test.sections.forEach((section) => {
-    section.questions.forEach((question) => {
+    getSectionQuestions(section).forEach((question) => {
       state.currentAttempt.responses[question.id] = {
         answer: "",
         confidence: {},
@@ -389,7 +478,7 @@ function getCurrentSection() {
 }
 
 function getCurrentQuestion() {
-  return getCurrentSection().questions[state.currentQuestionIndex];
+  return getSectionQuestions(getCurrentSection())[state.currentQuestionIndex];
 }
 
 function getCurrentQuestionAttempt() {
@@ -399,24 +488,28 @@ function getCurrentQuestionAttempt() {
 function renderAttempt(recordVisit = true) {
   const test = state.currentAttempt.test;
   const section = getCurrentSection();
+  const questions = getSectionQuestions(section);
   const question = getCurrentQuestion();
   const response = getCurrentQuestionAttempt();
+  const resource = getQuestionResource(section, question);
   if (recordVisit) response.visits += 1;
 
-  els.attemptTitle.textContent = test.title;
-  els.attemptLabel.textContent = `Section ${state.currentSectionIndex + 1} of ${test.sections.length}`;
   els.sectionName.textContent = section.name;
-  els.questionPosition.textContent = `Question ${state.currentQuestionIndex + 1} of ${section.questions.length}`;
+  els.paletteSectionTitle.textContent = section.name;
+  els.questionPosition.textContent = `Question No. ${state.currentQuestionIndex + 1}`;
   els.questionType.textContent = question.type.toUpperCase();
   els.questionText.textContent = question.text;
-  els.toggleReview.textContent = response.markedForReview ? "Unmark review" : "Mark for review";
+  els.questionInstruction.textContent = resource.instruction;
+  els.passageTitle.textContent = resource.title;
+  els.passageText.textContent = resource.text || "No passage or caselet is required for this question.";
+  els.marksLine.textContent = `Marks for correct answer: ${question.marks} | Negative Marks: ${Math.abs(question.negativeMarks)}`;
+  els.toggleReview.textContent = "Mark for Review & Next";
 
   if (question.type === "mcq") {
     els.optionList.classList.remove("hidden");
     els.titaBox.classList.add("hidden");
-    els.confidencePanel.classList.remove("hidden");
+    els.confidencePanel.classList.add("hidden");
     renderOptions(question, response);
-    renderConfidence(question, response);
   } else {
     els.optionList.classList.add("hidden");
     els.titaBox.classList.remove("hidden");
@@ -426,6 +519,7 @@ function renderAttempt(recordVisit = true) {
 
   renderTabs();
   renderPalette();
+  renderStatusCounts(questions);
   renderTimers();
 }
 
@@ -436,7 +530,7 @@ function renderOptions(question, response) {
     return `
       <label class="option-card ${selected ? "selected" : ""}">
         <input type="radio" name="answer" value="${key}" ${selected ? "checked" : ""} />
-        <span><strong>${key}.</strong> ${escapeHtml(option)}</span>
+        <span>${escapeHtml(getOptionText(option))}</span>
       </label>
     `;
   }).join("");
@@ -446,6 +540,7 @@ function renderOptions(question, response) {
       response.answer = input.value;
       renderOptions(question, response);
       renderPalette();
+      renderStatusCounts(getSectionQuestions(getCurrentSection()));
     });
   });
 }
@@ -456,7 +551,7 @@ function renderConfidence(question, response) {
     const value = Number(response.confidence[key] || 0);
     return `
       <label class="confidence-row">
-        <span>${key}. ${escapeHtml(option)}</span>
+        <span>${key}. ${escapeHtml(getOptionText(option))}</span>
         <input type="range" min="0" max="100" step="10" value="${value}" data-confidence="${key}" />
         <strong>${value}%</strong>
       </label>
@@ -512,14 +607,10 @@ function renderTabs() {
 
 function renderPalette() {
   const section = getCurrentSection();
-  els.questionPalette.innerHTML = section.questions.map((question, index) => {
+  const questions = getSectionQuestions(section);
+  els.questionPalette.innerHTML = questions.map((question, index) => {
     const response = state.currentAttempt.responses[question.id];
-    const classes = [
-      "palette-button",
-      response.answer ? "answered" : "",
-      response.markedForReview ? "review" : "",
-      index === state.currentQuestionIndex ? "current" : ""
-    ].join(" ");
+    const classes = ["palette-button", getPaletteState(response)].join(" ");
     return `<button class="${classes}" data-question="${index}">${index + 1}</button>`;
   }).join("");
 
@@ -528,6 +619,40 @@ function renderPalette() {
       switchQuestion(Number(button.dataset.question));
     });
   });
+}
+
+function getPaletteState(response) {
+  if (response.answer && response.markedForReview) return "answered-review";
+  if (response.markedForReview) return "review";
+  if (response.answer) return "answered";
+  if (response.visits > 0) return "not-answered";
+  return "not-visited";
+}
+
+function renderStatusCounts(questions) {
+  const counts = {
+    answered: 0,
+    notAnswered: 0,
+    notVisited: 0,
+    review: 0,
+    answeredReview: 0
+  };
+
+  questions.forEach((question, index) => {
+    const response = state.currentAttempt.responses[question.id];
+    const stateName = getPaletteState(response);
+    if (stateName === "answered") counts.answered += 1;
+    if (stateName === "not-answered") counts.notAnswered += 1;
+    if (stateName === "not-visited") counts.notVisited += 1;
+    if (stateName === "review") counts.review += 1;
+    if (stateName === "answered-review") counts.answeredReview += 1;
+  });
+
+  els.answeredCount.textContent = counts.answered;
+  els.notAnsweredCount.textContent = counts.notAnswered;
+  els.notVisitedCount.textContent = counts.notVisited;
+  els.reviewCount.textContent = counts.review;
+  els.answeredReviewCount.textContent = counts.answeredReview;
 }
 
 function renderTimers() {
@@ -543,7 +668,9 @@ function getSectionRemainingSeconds() {
 }
 
 function getCurrentVisibleQuestionSeconds() {
-  return Math.floor((Date.now() - state.questionStartedAt) / 1000);
+  const response = getCurrentQuestionAttempt();
+  const activeVisitSeconds = Math.floor((Date.now() - state.questionStartedAt) / 1000);
+  return response.timeSpentSeconds + Math.max(0, activeVisitSeconds);
 }
 
 function switchQuestion(index) {
@@ -572,8 +699,8 @@ function clearResponse() {
 
 function toggleReview() {
   const response = getCurrentQuestionAttempt();
-  response.markedForReview = !response.markedForReview;
-  renderAttemptPreserveTime();
+  response.markedForReview = true;
+  saveAndNext();
 }
 
 function saveAndNext() {
@@ -584,7 +711,8 @@ function saveAndNext() {
   }
 
   const section = getCurrentSection();
-  if (state.currentQuestionIndex < section.questions.length - 1) {
+  const questions = getSectionQuestions(section);
+  if (state.currentQuestionIndex < questions.length - 1) {
     switchQuestion(state.currentQuestionIndex + 1);
   } else {
     moveToNextSection();
@@ -633,7 +761,7 @@ function buildReport() {
   let unattempted = 0;
 
   attempt.test.sections.forEach((section) => {
-    section.questions.forEach((question) => {
+    getSectionQuestions(section).forEach((question) => {
       const response = attempt.responses[question.id];
       const isAttempted = Boolean(response.answer);
       const isCorrect = isAttempted && normalize(response.answer) === normalize(question.correctAnswer);
@@ -647,6 +775,7 @@ function buildReport() {
         section: section.name,
         questionId: question.id,
         question: question.text,
+        sourceTitle: getQuestionResource(section, question).title,
         type: question.type,
         selectedAnswer: response.answer || null,
         correctAnswer: question.correctAnswer,
