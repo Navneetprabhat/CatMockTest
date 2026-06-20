@@ -121,7 +121,13 @@ const state = {
   sectionStartedAt: null,
   questionStartedAt: null,
   timerId: null,
-  latestReport: null
+  latestReport: null,
+  calculatorExpression: "",
+  resultFilters: {
+    subject: "all",
+    correctness: "all",
+    insight: "all"
+  }
 };
 
 const els = {
@@ -140,6 +146,7 @@ const els = {
   questionPosition: document.getElementById("question-position"),
   questionType: document.getElementById("question-type"),
   questionInstruction: document.getElementById("question-instruction"),
+  testLayout: document.getElementById("test-layout"),
   passageTitle: document.getElementById("passage-title"),
   passageText: document.getElementById("passage-text"),
   marksLine: document.getElementById("marks-line"),
@@ -152,6 +159,7 @@ const els = {
   confidenceTotal: document.getElementById("confidence-total"),
   clearConfidence: document.getElementById("clear-confidence"),
   clearResponse: document.getElementById("clear-response"),
+  guessToggle: document.getElementById("guess-toggle"),
   toggleReview: document.getElementById("toggle-review"),
   saveNext: document.getElementById("save-next"),
   sectionTabs: document.getElementById("section-tabs"),
@@ -164,6 +172,11 @@ const els = {
   questionReview: document.getElementById("question-review"),
   insightList: document.getElementById("insight-list"),
   downloadReport: document.getElementById("download-report"),
+  downloadPdf: document.getElementById("download-pdf"),
+  subjectFilter: document.getElementById("subject-filter"),
+  correctnessFilter: document.getElementById("correctness-filter"),
+  insightFilter: document.getElementById("insight-filter"),
+  clearResultFilters: document.getElementById("clear-result-filters"),
   toast: document.getElementById("toast"),
   metricAttempts: document.getElementById("metric-attempts"),
   metricBest: document.getElementById("metric-best"),
@@ -173,7 +186,11 @@ const els = {
   notAnsweredCount: document.getElementById("not-answered-count"),
   notVisitedCount: document.getElementById("not-visited-count"),
   reviewCount: document.getElementById("review-count"),
-  answeredReviewCount: document.getElementById("answered-review-count")
+  answeredReviewCount: document.getElementById("answered-review-count"),
+  calculatorToggle: document.getElementById("calculator-toggle"),
+  calculatorPanel: document.getElementById("calculator-panel"),
+  calculatorClose: document.getElementById("calculator-close"),
+  calculatorDisplay: document.getElementById("calculator-display")
 };
 
 async function init() {
@@ -219,12 +236,23 @@ function bindEvents() {
   els.jsonUpload.addEventListener("change", handleUpload);
   els.loadTemplate.addEventListener("click", () => showValidation(sampleTests[0], []));
   els.clearResponse.addEventListener("click", clearResponse);
+  els.guessToggle.addEventListener("click", toggleGuessPanel);
   els.toggleReview.addEventListener("click", toggleReview);
   els.saveNext.addEventListener("click", saveAndNext);
   els.nextSection.addEventListener("click", moveToNextSection);
   els.submitTest.addEventListener("click", submitAttempt);
   els.clearConfidence.addEventListener("click", clearConfidence);
+  els.calculatorToggle.addEventListener("click", toggleCalculator);
+  els.calculatorClose.addEventListener("click", () => els.calculatorPanel.classList.add("hidden"));
+  els.calculatorPanel.querySelectorAll("[data-calc]").forEach((button) => {
+    button.addEventListener("click", () => handleCalculatorInput(button.dataset.calc));
+  });
   els.downloadReport.addEventListener("click", downloadReport);
+  els.downloadPdf.addEventListener("click", printReport);
+  els.subjectFilter.addEventListener("change", () => updateResultFilter("subject", els.subjectFilter.value));
+  els.correctnessFilter.addEventListener("change", () => updateResultFilter("correctness", els.correctnessFilter.value));
+  els.insightFilter.addEventListener("change", () => updateResultFilter("insight", els.insightFilter.value));
+  els.clearResultFilters.addEventListener("click", clearResultFilters);
   els.titaAnswer.addEventListener("input", () => {
     getCurrentQuestionAttempt().answer = els.titaAnswer.value.trim();
     renderPalette();
@@ -452,6 +480,7 @@ function buildResponseShell(test) {
         answer: "",
         confidence: {},
         hasConfidence: false,
+        showGuess: false,
         markedForReview: false,
         timeSpentSeconds: 0,
         visits: 0
@@ -501,19 +530,24 @@ function renderAttempt(recordVisit = true) {
   els.questionText.textContent = question.text;
   els.questionInstruction.textContent = resource.instruction;
   els.passageTitle.textContent = resource.title;
-  els.passageText.textContent = resource.text || "No passage or caselet is required for this question.";
+  els.passageText.textContent = resource.text;
+  els.testLayout.classList.toggle("question-only", !hasQuestionResource(resource));
   els.marksLine.textContent = `Marks for correct answer: ${question.marks} | Negative Marks: ${Math.abs(question.negativeMarks)}`;
   els.toggleReview.textContent = "Mark for Review & Next";
+  updateSectionActions();
 
   if (question.type === "mcq") {
     els.optionList.classList.remove("hidden");
     els.titaBox.classList.add("hidden");
-    els.confidencePanel.classList.add("hidden");
+    els.guessToggle.classList.remove("hidden");
+    els.confidencePanel.classList.toggle("hidden", !response.showGuess);
     renderOptions(question, response);
+    if (response.showGuess) renderConfidence(question, response);
   } else {
     els.optionList.classList.add("hidden");
     els.titaBox.classList.remove("hidden");
     els.confidencePanel.classList.add("hidden");
+    els.guessToggle.classList.add("hidden");
     els.titaAnswer.value = response.answer || "";
   }
 
@@ -521,6 +555,16 @@ function renderAttempt(recordVisit = true) {
   renderPalette();
   renderStatusCounts(questions);
   renderTimers();
+}
+
+function hasQuestionResource(resource) {
+  return Boolean(resource.title || resource.text);
+}
+
+function updateSectionActions() {
+  const isFinalSection = state.currentSectionIndex === state.currentAttempt.test.sections.length - 1;
+  els.nextSection.classList.toggle("hidden", isFinalSection);
+  els.submitTest.classList.toggle("hidden", !isFinalSection);
 }
 
 function renderOptions(question, response) {
@@ -548,21 +592,25 @@ function renderOptions(question, response) {
 function renderConfidence(question, response) {
   els.confidenceControls.innerHTML = question.options.map((option, index) => {
     const key = optionKey(index);
-    const value = Number(response.confidence[key] || 0);
+    const value = response.confidence[key] ?? "";
     return `
       <label class="confidence-row">
         <span>${key}. ${escapeHtml(getOptionText(option))}</span>
-        <input type="range" min="0" max="100" step="10" value="${value}" data-confidence="${key}" />
-        <strong>${value}%</strong>
+        <input type="number" min="0" max="100" step="1" value="${value}" data-confidence="${key}" placeholder="0" />
+        <strong>%</strong>
       </label>
     `;
   }).join("");
 
   els.confidenceControls.querySelectorAll("input").forEach((input) => {
     input.addEventListener("input", () => {
-      response.confidence[input.dataset.confidence] = Number(input.value);
+      const key = input.dataset.confidence;
+      const value = input.value.trim();
+      if (value === "") delete response.confidence[key];
+      else response.confidence[key] = clampPercent(value);
+      if (value !== "") input.value = response.confidence[key];
       response.hasConfidence = confidenceTotal(response) > 0;
-      renderConfidence(question, response);
+      updateConfidenceTotal(response);
     });
   });
   updateConfidenceTotal(response);
@@ -572,17 +620,121 @@ function confidenceTotal(response) {
   return Object.values(response.confidence).reduce((sum, value) => sum + Number(value || 0), 0);
 }
 
+function clampPercent(value) {
+  const numeric = Math.round(Number(value));
+  if (!Number.isFinite(numeric)) return 0;
+  return Math.min(100, Math.max(0, numeric));
+}
+
+function normalizeGuessPercentages(question, response) {
+  const keys = question.options.map((option, index) => optionKey(index));
+  const values = keys.map((key) => clampPercent(response.confidence[key] || 0));
+  const total = values.reduce((sum, value) => sum + value, 0);
+
+  if (total === 0) {
+    response.confidence = {};
+    response.hasConfidence = false;
+    return;
+  }
+
+  let normalized = values;
+  if (total > 100) {
+    const scaled = values.map((value) => (value / total) * 100);
+    normalized = scaled.map((value) => Math.floor(value));
+    distributeRemainder(normalized, 100 - normalized.reduce((sum, value) => sum + value, 0), scaled);
+  } else if (total < 100) {
+    const blankIndexes = keys
+      .map((key, index) => response.confidence[key] === undefined ? index : -1)
+      .filter((index) => index >= 0);
+    const zeroIndexes = values
+      .map((value, index) => value === 0 ? index : -1)
+      .filter((index) => index >= 0);
+    const targetIndexes = blankIndexes.length ? blankIndexes : zeroIndexes.length ? zeroIndexes : keys.map((key, index) => index);
+    normalized = [...values];
+    distributeEvenly(normalized, 100 - total, targetIndexes);
+  }
+
+  response.confidence = keys.reduce((confidence, key, index) => {
+    confidence[key] = normalized[index];
+    return confidence;
+  }, {});
+  response.hasConfidence = true;
+}
+
+function distributeRemainder(values, remainder, rawValues) {
+  const order = rawValues
+    .map((value, index) => ({ index, fraction: value - Math.floor(value) }))
+    .sort((a, b) => b.fraction - a.fraction);
+  for (let i = 0; i < remainder; i += 1) {
+    values[order[i % order.length].index] += 1;
+  }
+}
+
+function distributeEvenly(values, remainder, indexes) {
+  indexes.forEach((index, offset) => {
+    const base = Math.floor(remainder / indexes.length);
+    const extra = offset < remainder % indexes.length ? 1 : 0;
+    values[index] += base + extra;
+  });
+}
+
 function updateConfidenceTotal(response) {
   const total = confidenceTotal(response);
-  els.confidenceTotal.textContent = `Total: ${total}%`;
-  els.confidenceTotal.classList.toggle("invalid", response.hasConfidence && total !== 100);
+  els.confidenceTotal.textContent = `Entered total: ${total}%`;
+  els.confidenceTotal.classList.toggle("invalid", response.hasConfidence && total > 100);
 }
 
 function clearConfidence() {
   const response = getCurrentQuestionAttempt();
   response.confidence = {};
   response.hasConfidence = false;
+  response.showGuess = false;
   renderAttemptPreserveTime();
+}
+
+function toggleGuessPanel() {
+  const question = getCurrentQuestion();
+  if (question.type !== "mcq") return;
+  const response = getCurrentQuestionAttempt();
+  response.showGuess = !response.showGuess;
+  renderAttemptPreserveTime();
+}
+
+function toggleCalculator() {
+  els.calculatorPanel.classList.toggle("hidden");
+  updateCalculatorDisplay();
+}
+
+function handleCalculatorInput(value) {
+  if (value === "clear") {
+    state.calculatorExpression = "";
+  } else if (value === "back") {
+    state.calculatorExpression = state.calculatorExpression.slice(0, -1);
+  } else if (value === "equals") {
+    state.calculatorExpression = calculateExpression(state.calculatorExpression);
+  } else if (value === "%") {
+    const result = calculateExpression(state.calculatorExpression);
+    state.calculatorExpression = result === "Error" ? result : String(Number(result) / 100);
+  } else {
+    if (state.calculatorExpression === "Error") state.calculatorExpression = "";
+    state.calculatorExpression += value;
+  }
+  updateCalculatorDisplay();
+}
+
+function calculateExpression(expression) {
+  const trimmed = expression.trim();
+  if (!trimmed || !/^[0-9+\-*/().\s]+$/.test(trimmed)) return "Error";
+  try {
+    const result = Function(`"use strict"; return (${trimmed})`)();
+    return Number.isFinite(result) ? String(Number(result.toFixed(8))) : "Error";
+  } catch (error) {
+    return "Error";
+  }
+}
+
+function updateCalculatorDisplay() {
+  els.calculatorDisplay.value = state.calculatorExpression || "0";
 }
 
 function renderTabs() {
@@ -705,9 +857,9 @@ function toggleReview() {
 
 function saveAndNext() {
   const response = getCurrentQuestionAttempt();
-  if (response.hasConfidence && confidenceTotal(response) !== 100) {
-    showToast("Confidence mapping is optional, but if used it must total 100%.");
-    return;
+  const question = getCurrentQuestion();
+  if (response.hasConfidence && question.type === "mcq") {
+    normalizeGuessPercentages(question, response);
   }
 
   const section = getCurrentSection();
@@ -770,8 +922,17 @@ function buildReport() {
       if (!isAttempted) unattempted += 1;
       else if (isCorrect) correct += 1;
       else incorrect += 1;
+      const confidenceOnSelected = response.hasConfidence && response.answer ? Number(response.confidence[response.answer] || 0) : null;
+      const confidenceOnCorrect = response.hasConfidence ? Number(response.confidence[question.correctAnswer] || 0) : null;
+      const highestOption = response.hasConfidence ? highestConfidenceOption(response.confidence) : null;
+      const decisionMismatch = Boolean(response.hasConfidence && highestOption && response.answer && highestOption !== response.answer);
+      const guessedAttempt = Boolean(isAttempted && response.hasConfidence);
+      const highProbabilityGuess = guessedAttempt && confidenceOnSelected >= 70;
+      const confidentAttempt = Boolean(isAttempted && (!response.hasConfidence || confidenceOnSelected >= 70));
+      const unmarkedLikelyGuess = Boolean(isAttempted && !response.hasConfidence && !isCorrect);
 
       questions.push({
+        questionNumber: questions.length + 1,
         section: section.name,
         questionId: question.id,
         question: question.text,
@@ -784,9 +945,14 @@ function buildReport() {
         marks,
         confidence: response.hasConfidence ? response.confidence : null,
         hasConfidence: response.hasConfidence,
-        confidenceOnSelected: response.hasConfidence ? Number(response.confidence[response.answer] || 0) : null,
-        confidenceOnCorrect: response.hasConfidence ? Number(response.confidence[question.correctAnswer] || 0) : null,
-        highestConfidenceOption: response.hasConfidence ? highestConfidenceOption(response.confidence) : null,
+        confidenceOnSelected,
+        confidenceOnCorrect,
+        highestConfidenceOption: highestOption,
+        decisionMismatch,
+        guessedAttempt,
+        highProbabilityGuess,
+        confidentAttempt,
+        unmarkedLikelyGuess,
         timeSpentSeconds: response.timeSpentSeconds,
         visits: response.visits,
         markedForReview: response.markedForReview,
@@ -811,10 +977,10 @@ function buildReport() {
 }
 
 function renderResults(report) {
+  state.resultFilters = { subject: "all", correctness: "all", insight: "all" };
   const accuracy = report.totalQuestions ? Math.round((report.correct / report.totalQuestions) * 100) : 0;
   const attempted = report.correct + report.incorrect;
   const avgTime = report.totalQuestions ? Math.round(report.questions.reduce((sum, q) => sum + q.timeSpentSeconds, 0) / report.totalQuestions) : 0;
-  const confidenceUsed = report.questions.filter((q) => q.hasConfidence).length;
 
   els.resultTitle.textContent = report.testTitle;
   els.resultSubtitle.textContent = `${attempted} attempted, ${report.unattempted} unattempted, ${accuracy}% accuracy across all questions.`;
@@ -824,50 +990,231 @@ function renderResults(report) {
     ${metricMarkup("Incorrect", report.incorrect)}
     ${metricMarkup("Avg time", `${avgTime}s`)}
   `;
+  renderResultFilters(report);
+  renderQuestionReview(report);
+  renderInsights(report, avgTime);
+  renderHistory();
+}
 
-  els.questionReview.innerHTML = report.questions.map((q, index) => {
+function renderQuestionReview(report) {
+  const questions = getFilteredReportQuestions(report);
+  if (!questions.length) {
+    els.questionReview.innerHTML = `<div class="empty-state">No questions match the selected filters.</div>`;
+    return;
+  }
+
+  els.questionReview.innerHTML = questions.map((q, index) => {
     const status = !q.isAttempted ? "Unattempted" : q.isCorrect ? "Correct" : "Incorrect";
     const statusClass = q.isCorrect ? "status-good" : q.isAttempted ? "status-bad" : "";
-    const mismatch = q.hasConfidence && q.highestConfidenceOption && q.selectedAnswer && q.highestConfidenceOption !== q.selectedAnswer;
+    const mismatch = isDecisionMismatch(q);
+    const questionNumber = q.questionNumber || report.questions.indexOf(q) + 1 || index + 1;
     return `
       <article class="review-card">
         <div class="review-meta">
-          <span>Q${index + 1}</span>
+          <span>Q${questionNumber}</span>
           <span>${escapeHtml(q.section)}</span>
+          ${q.topic ? `<span>${escapeHtml(q.topic)}</span>` : ""}
           <span>${q.timeSpentSeconds}s</span>
           <span>${q.visits} visits</span>
           <span class="${statusClass}">${status}</span>
+          ${isGuessedAttempt(q) ? "<span>Guess used</span>" : ""}
+          ${isHighProbabilityGuess(q) ? "<span>70%+ guess</span>" : ""}
           ${q.markedForReview ? "<span>Marked for review</span>" : ""}
         </div>
         <h3>${escapeHtml(q.question)}</h3>
         <p>Selected: <strong>${escapeHtml(q.selectedAnswer || "None")}</strong> | Correct: <strong>${escapeHtml(String(q.correctAnswer))}</strong> | Marks: <strong>${q.marks}</strong></p>
-        ${q.hasConfidence ? `<p>Confidence on selected: <strong>${q.confidenceOnSelected}%</strong> | Confidence on correct: <strong>${q.confidenceOnCorrect}%</strong> | Highest confidence: <strong>${q.highestConfidenceOption}</strong></p>` : "<p>No confidence mapping provided.</p>"}
-        ${mismatch ? "<p><strong>Decision mismatch:</strong> selected answer differs from highest-confidence option.</p>" : ""}
+        ${q.hasConfidence ? `<p>Guess on selected: <strong>${q.confidenceOnSelected}%</strong> | Guess on correct: <strong>${q.confidenceOnCorrect}%</strong> | Highest % option: <strong>${q.highestConfidenceOption}</strong></p>` : "<p>No Guess percentage provided.</p>"}
+        ${mismatch ? "<p><strong>Decision mismatch:</strong> selected answer differs from highest % option.</p>" : ""}
+        ${isUnmarkedLikelyGuess(q) ? "<p><strong>Unmarked likely guess:</strong> wrong answer without a Guess percentage. Mark these next time if you were unsure.</p>" : ""}
         ${q.explanation ? `<p>${escapeHtml(q.explanation)}</p>` : ""}
       </article>
     `;
   }).join("");
-
-  els.insightList.innerHTML = buildInsights(report, confidenceUsed, avgTime).map((insight) => `<div class="insight">${insight}</div>`).join("");
-  renderHistory();
 }
 
 function metricMarkup(label, value) {
   return `<article class="metric-card"><span>${label}</span><strong>${value}</strong></article>`;
 }
 
-function buildInsights(report, confidenceUsed, avgTime) {
-  const highConfidenceWrong = report.questions.filter((q) => !q.isCorrect && q.hasConfidence && q.confidenceOnSelected >= 70).length;
-  const knewButMissed = report.questions.filter((q) => !q.isCorrect && q.hasConfidence && q.confidenceOnCorrect >= 70).length;
-  const mismatches = report.questions.filter((q) => q.hasConfidence && q.selectedAnswer && q.highestConfidenceOption !== q.selectedAnswer).length;
-  const slowWrong = report.questions.filter((q) => !q.isCorrect && q.isAttempted && q.timeSpentSeconds > avgTime).length;
+function renderResultFilters(report) {
+  const subjects = [...new Set(report.questions.map((q) => q.section))];
+  els.subjectFilter.innerHTML = [
+    `<option value="all">All subjects</option>`,
+    ...subjects.map((subject) => `<option value="${escapeHtml(subject)}">${escapeHtml(subject)}</option>`)
+  ].join("");
+  els.subjectFilter.value = subjects.includes(state.resultFilters.subject) ? state.resultFilters.subject : "all";
+  els.correctnessFilter.value = state.resultFilters.correctness;
+  els.insightFilter.value = state.resultFilters.insight;
+}
+
+function updateResultFilter(key, value) {
+  state.resultFilters[key] = value;
+  if (!state.latestReport) return;
+  renderQuestionReview(state.latestReport);
+}
+
+function clearResultFilters() {
+  state.resultFilters = { subject: "all", correctness: "all", insight: "all" };
+  if (!state.latestReport) return;
+  renderResultFilters(state.latestReport);
+  renderQuestionReview(state.latestReport);
+}
+
+function getFilteredReportQuestions(report) {
+  return report.questions.filter((question) => {
+    if (state.resultFilters.subject !== "all" && question.section !== state.resultFilters.subject) return false;
+    if (!matchesCorrectnessFilter(question, state.resultFilters.correctness)) return false;
+    if (!matchesInsightFilter(question, state.resultFilters.insight)) return false;
+    return true;
+  });
+}
+
+function matchesCorrectnessFilter(question, filter) {
+  if (filter === "all") return true;
+  if (filter === "correct") return question.isAttempted && question.isCorrect;
+  if (filter === "incorrect") return question.isAttempted && !question.isCorrect;
+  if (filter === "unattempted") return !question.isAttempted;
+  return true;
+}
+
+function matchesInsightFilter(question, filter) {
+  if (filter === "all") return true;
+  if (filter === "confident") return isConfidentAttempt(question);
+  if (filter === "guessed") return isGuessedAttempt(question);
+  if (filter === "high-guess") return isHighProbabilityGuess(question);
+  if (filter === "unmarked-guess") return isUnmarkedLikelyGuess(question);
+  if (filter === "mismatch") return isDecisionMismatch(question);
+  if (filter === "slow-wrong") return isSlowWrong(question);
+  return true;
+}
+
+function renderInsights(report, avgTime) {
+  const insights = buildInsights(report, avgTime);
+  els.insightList.innerHTML = insights.map((insight) => `
+    <button class="insight" type="button" data-insight-filter="${insight.filter}">
+      <strong>${escapeHtml(insight.title)}</strong>
+      <span>${escapeHtml(insight.body)}</span>
+    </button>
+  `).join("");
+
+  els.insightList.querySelectorAll("[data-insight-filter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.resultFilters.insight = button.dataset.insightFilter;
+      renderResultFilters(report);
+      renderQuestionReview(report);
+    });
+  });
+}
+
+function buildInsights(report, avgTime) {
+  const attempted = report.questions.filter((q) => q.isAttempted);
+  const confidentAttempts = report.questions.filter(isConfidentAttempt);
+  const guessedAttempts = report.questions.filter(isGuessedAttempt);
+  const highGuesses = report.questions.filter(isHighProbabilityGuess);
+  const unmarkedLikelyGuesses = report.questions.filter(isUnmarkedLikelyGuess);
+  const mismatches = report.questions.filter(isDecisionMismatch);
+  const slowWrong = report.questions.filter((q) => !q.isCorrect && q.isAttempted && q.timeSpentSeconds > avgTime);
+  const confidentAccuracy = accuracyLabel(confidentAttempts);
+  const highGuessAccuracy = accuracyLabel(highGuesses);
+  const highGuessWrong = highGuesses.filter((q) => !q.isCorrect).length;
+  const subjectAccuracy = subjectAccuracyLabel(confidentAttempts);
+  const conclusion = highGuesses.length
+    ? `You should mark answers where you feel 70%+ chance; those guesses are running at ${highGuessAccuracy}.`
+    : "You did not mark any 70%+ guesses yet. Start marking them so review separates knowledge from risk.";
+  const mistakePattern = confidentAttempts.length && highGuesses.length
+    ? `Confident attempts are at ${confidentAccuracy}; 70%+ guesses are at ${highGuessAccuracy}. If these stay close, analyze the mistakes, not only the guessing.`
+    : "Use Guess on uncertain attempts so the report can separate confident mistakes from risk-managed guesses.";
+
   return [
-    `Confidence mapping was used on ${confidenceUsed} of ${report.totalQuestions} questions.`,
-    `${mismatches} questions had a selected answer different from the highest-confidence option.`,
-    `${highConfidenceWrong} incorrect answers had at least 70% confidence on the selected option.`,
-    `${knewButMissed} misses gave at least 70% confidence to the correct answer.`,
-    `${slowWrong} wrong answers took longer than your average question time.`
+    {
+      title: "Attempts",
+      body: `You confidently attempted ${confidentAttempts.length} questions and guessed ${guessedAttempts.length}. Total attempted: ${attempted.length}.`,
+      filter: "confident"
+    },
+    {
+      title: "Confident Attempts",
+      body: `Subject-wise accuracy: ${subjectAccuracy}. Overall confident accuracy: ${confidentAccuracy}.`,
+      filter: "confident"
+    },
+    {
+      title: "70%+ Guessed Accuracy",
+      body: `${highGuesses.length} high-probability guesses, ${highGuessAccuracy} accuracy, ${highGuessWrong} wrong. These are the first questions to review for overconfidence.`,
+      filter: "high-guess"
+    },
+    {
+      title: "Unmarked Guess Analysis",
+      body: `${unmarkedLikelyGuesses.length} wrong attempts had no Guess percentage. Mark uncertain attempts so future review knows whether it was a mistake or a risk.`,
+      filter: "unmarked-guess"
+    },
+    {
+      title: "Highest % Mismatch",
+      body: `${mismatches.length} answers differed from the option with your highest Guess percentage. Click to inspect decision conflicts.`,
+      filter: "mismatch"
+    },
+    {
+      title: "Time Risk",
+      body: `${slowWrong.length} wrong answers took longer than your average question time. These are possible traps or sunk-cost questions.`,
+      filter: "slow-wrong"
+    },
+    {
+      title: "Conclusion",
+      body: conclusion,
+      filter: "high-guess"
+    },
+    {
+      title: "Next Action",
+      body: mistakePattern,
+      filter: "confident"
+    }
   ];
+}
+
+function accuracyLabel(questions) {
+  if (!questions.length) return "0% (0/0)";
+  const correct = questions.filter((q) => q.isCorrect).length;
+  return `${Math.round((correct / questions.length) * 100)}% (${correct}/${questions.length})`;
+}
+
+function subjectAccuracyLabel(questions) {
+  if (!questions.length) return "No confident attempts yet";
+  const groups = questions.reduce((acc, question) => {
+    acc[question.section] = acc[question.section] || [];
+    acc[question.section].push(question);
+    return acc;
+  }, {});
+  return Object.entries(groups)
+    .map(([subject, items]) => `${subject}: ${accuracyLabel(items)}`)
+    .join("; ");
+}
+
+function isConfidentAttempt(question) {
+  if (!question.isAttempted) return false;
+  if (!question.hasConfidence) return true;
+  return Number(question.confidenceOnSelected || 0) >= 70;
+}
+
+function isGuessedAttempt(question) {
+  return Boolean(question.isAttempted && question.hasConfidence);
+}
+
+function isHighProbabilityGuess(question) {
+  return Boolean(isGuessedAttempt(question) && Number(question.confidenceOnSelected || 0) >= 70);
+}
+
+function isUnmarkedLikelyGuess(question) {
+  return Boolean(question.isAttempted && !question.hasConfidence && !question.isCorrect);
+}
+
+function isDecisionMismatch(question) {
+  return Boolean(question.hasConfidence && question.highestConfidenceOption && question.selectedAnswer && question.highestConfidenceOption !== question.selectedAnswer);
+}
+
+function isSlowWrong(question) {
+  if (!state.latestReport) return false;
+  const avgTime = state.latestReport.totalQuestions
+    ? Math.round(state.latestReport.questions.reduce((sum, q) => sum + q.timeSpentSeconds, 0) / state.latestReport.totalQuestions)
+    : 0;
+  return Boolean(!question.isCorrect && question.isAttempted && question.timeSpentSeconds > avgTime);
 }
 
 function renderHistory() {
@@ -907,6 +1254,14 @@ function downloadReport() {
   link.download = `${state.latestReport.testTitle.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-attempt-report.json`;
   link.click();
   URL.revokeObjectURL(url);
+}
+
+function printReport() {
+  if (!state.latestReport) return;
+  const originalTitle = document.title;
+  document.title = `${state.latestReport.testTitle} Report`;
+  window.print();
+  document.title = originalTitle;
 }
 
 function highestConfidenceOption(confidence) {
