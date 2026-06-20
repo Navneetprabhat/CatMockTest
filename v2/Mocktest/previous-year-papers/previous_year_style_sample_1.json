@@ -1,0 +1,959 @@
+{
+  "id": "previous-year-style-sample-1",
+  "title": "CAT Previous Year Style Sample 1",
+  "description": "A previous-year-style practice paper with 24 VARC, 20 DILR, and 22 QA questions.",
+  "durationMinutes": 120,
+  "sections": [
+    {
+      "id": "varc",
+      "name": "VARC",
+      "durationMinutes": 40,
+      "instruction": "Read the question carefully and choose the best answer.",
+      "passages": [
+        {
+          "id": "varc-p1",
+          "title": "Passage 1: Craft And Efficiency",
+          "instruction": "The passage below is accompanied by four questions. Based on the passage, choose the best answer for each question.",
+          "text": "The idea of craftsmanship is not simply nostalgic. Crafts require distinct skills, an all-round approach to work that involves the whole product, rather than individual parts, and an attitude that treats the user as more than a buyer. The craftsperson's devotion to the job is not a refusal of efficiency; it is a refusal to make efficiency the only standard.\n\nThis craft concept often runs against the dominant ethos of management, where processes are divided, measured, and repeated for consistency. In such systems, craft skills are sometimes portrayed as primitive or sentimental. Yet the history of industry shows that people repeatedly return to craft when mass production begins to feel anonymous.\n\nThe contrast between artisanship and efficiency became visible in the nineteenth century when manufacturers developed standardised parts and factory systems. The success of mass-produced devices proved the power of scale. But it also produced a reaction: first in the Arts and Crafts movement, later in the small-is-beautiful movements, and now in consumer interest in local, durable, and environmentally responsible products.\n\nThere are two potential markets for craft. One is the market of connoisseurs who can pay for rare hand-made objects. The other is broader: people who want goods that carry a human touch, are locally accountable, and do not hide the conditions of their making. The renewed interest in craft belongs mainly to the second market."
+        },
+        {
+          "id": "varc-p2",
+          "title": "Passage 2: Maps And Memory",
+          "instruction": "The passage below is accompanied by four questions. Based on the passage, choose the best answer for each question.",
+          "text": "Digital maps have made cities easier to navigate, but they have also changed the way people remember them. Earlier, one learned a city by errors: a wrong lane, a landmark noticed late, a shortcut discovered by accident. These mistakes created a personal geography. A city was not only a network of roads; it was a collection of stories attached to movement.\n\nThe turn-by-turn map reduces the cost of being lost. This is useful, especially for new arrivals, delivery workers, and emergency services. Yet it also encourages a thin form of attention. The traveller follows instructions while the surroundings remain background. A person may reach a cafe accurately and still be unable to describe the neighbourhood through which they passed.\n\nThis does not mean that digital maps destroy urban knowledge. They create a different kind of knowledge: searchable, shareable, and often more democratic than memory passed through insiders. The question is whether this new knowledge can coexist with slower forms of attention.\n\nThe city remembered only through a screen becomes efficient but fragile. When the battery dies or the network fails, the confident traveller is suddenly a beginner. The richer skill is not to reject the map but to look up from it often enough to let the city become familiar."
+        },
+        {
+          "id": "varc-p3",
+          "title": "Passage 3: Science And Uncertainty",
+          "instruction": "The passage below is accompanied by four questions. Based on the passage, choose the best answer for each question.",
+          "text": "Public debates often demand certainty from science, but science advances by making uncertainty visible. A measurement is useful not because it is final, but because its limits are stated. A model is valuable not because it predicts everything, but because it clarifies what assumptions are being tested.\n\nThis habit can be frustrating in public life. Policy must act before every detail is known, while research is trained to delay conclusions until evidence accumulates. The resulting tension is sometimes mistaken for weakness. When scientists revise a claim, critics say they were unreliable; scientists would say revision is the method working as intended.\n\nThe problem becomes sharper when uncertainty is communicated poorly. If experts speak only in probabilities, people may hear evasion. If they speak too confidently, later correction looks like failure. Good communication must therefore explain both what is known and what could change.\n\nScientific authority should not rest on the promise of perfect answers. It should rest on disciplined openness: the willingness to expose methods, update conclusions, and distinguish between doubt that is productive and doubt manufactured to delay action."
+        },
+        {
+          "id": "varc-p4",
+          "title": "Passage 4: Seeds And Resilience",
+          "instruction": "The passage below is accompanied by four questions. Based on the passage, choose the best answer for each question.",
+          "text": "Modern agriculture has often pursued uniformity. A field planted with a single high-yield variety is easier to manage, harvest, and sell. Uniform crops fit machinery, contracts, and global supply chains. But uniformity also concentrates risk. A disease or climate shock that affects one plant may affect the entire field.\n\nTraditional seed systems work differently. Farmers save, exchange, and adapt seeds across seasons. The resulting diversity may not always produce the maximum yield in a perfect year, but it can protect livelihoods in uncertain years. A mixed field is a form of memory: it carries experiments from previous generations.\n\nSeed diversity is sometimes dismissed as backward because it does not fit the language of scale. Yet resilience often looks inefficient when measured only by output per acre in one season. The value of diversity appears over time, especially when rainfall changes, pests spread, or markets shift.\n\nThe challenge is not to romanticise old methods or reject scientific breeding. It is to build systems in which productivity and diversity are not treated as enemies. Agriculture that forgets resilience may look successful until the year it most needs memory."
+        }
+      ],
+      "questions": [
+        {
+          "id": "v1",
+          "type": "mcq",
+          "passageId": "varc-p1",
+          "text": "The passage suggests that the renewed interest in craft is primarily linked to:",
+          "options": [
+            "a desire for goods that reveal human skill and local accountability.",
+            "a complete rejection of all forms of efficiency.",
+            "the disappearance of mass-produced goods from markets.",
+            "the belief that hand-made goods must always be cheaper."
+          ],
+          "correctAnswer": "A",
+          "explanation": "The passage links renewed craft interest to human touch, local accountability, durability, and environmental responsibility.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v2",
+          "type": "mcq",
+          "passageId": "varc-p1",
+          "text": "Which of the following best captures the passage's view of efficiency?",
+          "options": [
+            "Efficiency is useless when products are made by skilled workers.",
+            "Efficiency becomes problematic when it is treated as the only standard.",
+            "Efficiency was invented by the Arts and Crafts movement.",
+            "Efficiency and craftsmanship are identical ideas."
+          ],
+          "correctAnswer": "B",
+          "explanation": "The author does not reject efficiency; the objection is to making it the sole criterion.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v3",
+          "type": "mcq",
+          "passageId": "varc-p1",
+          "text": "The phrase 'the second market' refers to people who:",
+          "options": [
+            "collect rare handmade objects mainly as luxury items.",
+            "work in nineteenth-century factories.",
+            "want products that are durable, accountable, and human in origin.",
+            "prefer standardised parts because they are easier to repair."
+          ],
+          "correctAnswer": "C",
+          "explanation": "The second market is broader and values human touch, local accountability, and visible conditions of making.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v4",
+          "type": "mcq",
+          "passageId": "varc-p1",
+          "text": "Which option is NOT mentioned as part of the craft revival?",
+          "options": [
+            "Concern for environmentally responsible products.",
+            "Interest in locally accountable goods.",
+            "A reaction against anonymous mass production.",
+            "A belief that factory systems have become impossible to operate."
+          ],
+          "correctAnswer": "D",
+          "explanation": "The passage discusses reactions to factory systems, not their impossibility.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v5",
+          "type": "mcq",
+          "passageId": "varc-p2",
+          "text": "According to the passage, older ways of learning a city created a personal geography because they involved:",
+          "options": [
+            "memorising every official road name.",
+            "moving through errors, landmarks, and accidental discoveries.",
+            "avoiding all forms of technology.",
+            "following instructions from delivery workers."
+          ],
+          "correctAnswer": "B",
+          "explanation": "The passage says errors, late-noticed landmarks, and accidental shortcuts made city knowledge personal.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v6",
+          "type": "mcq",
+          "passageId": "varc-p2",
+          "text": "The author's central concern about turn-by-turn maps is that they may:",
+          "options": [
+            "make emergency services slower.",
+            "prevent cities from changing their road networks.",
+            "encourage accurate travel without deep attention to surroundings.",
+            "make cafes impossible to locate."
+          ],
+          "correctAnswer": "C",
+          "explanation": "The author says travellers can reach destinations accurately while surroundings remain background.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v7",
+          "type": "mcq",
+          "passageId": "varc-p2",
+          "text": "Which statement best represents the author's final position?",
+          "options": [
+            "Digital maps must be rejected to recover urban memory.",
+            "Digital maps are useful, but users should also cultivate attention to place.",
+            "Only insiders can understand a city properly.",
+            "Searchable knowledge is always inferior to personal memory."
+          ],
+          "correctAnswer": "B",
+          "explanation": "The author argues not for rejecting maps but for looking up from them often enough to learn the city.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v8",
+          "type": "mcq",
+          "passageId": "varc-p2",
+          "text": "The word 'fragile' in the passage most nearly means:",
+          "options": [
+            "physically broken.",
+            "dependent on conditions that may fail.",
+            "morally wrong.",
+            "impossible to share."
+          ],
+          "correctAnswer": "B",
+          "explanation": "The traveller's knowledge becomes fragile when it depends on battery and network access.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Vocabulary in Context"
+        },
+        {
+          "id": "v9",
+          "type": "mcq",
+          "passageId": "varc-p3",
+          "text": "The passage argues that scientific uncertainty is useful because it:",
+          "options": [
+            "allows scientists to avoid making any claims.",
+            "makes the limits of evidence and assumptions explicit.",
+            "proves that public policy should never act.",
+            "removes the need for communication."
+          ],
+          "correctAnswer": "B",
+          "explanation": "The passage says measurements and models are useful when their limits and assumptions are stated.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v10",
+          "type": "mcq",
+          "passageId": "varc-p3",
+          "text": "Why do critics sometimes treat scientific revision as weakness?",
+          "options": [
+            "They confuse revision with unreliability rather than seeing it as part of the method.",
+            "They believe all models should avoid assumptions.",
+            "They expect scientists to speak only in probabilities.",
+            "They reject all public policy."
+          ],
+          "correctAnswer": "A",
+          "explanation": "The passage says critics may call revised claims unreliable, while scientists see revision as the method working.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v11",
+          "type": "mcq",
+          "passageId": "varc-p3",
+          "text": "Good scientific communication, according to the passage, should:",
+          "options": [
+            "hide uncertainty to maintain authority.",
+            "explain what is known and what could change.",
+            "avoid giving any policy-relevant information.",
+            "promise perfect answers."
+          ],
+          "correctAnswer": "B",
+          "explanation": "The passage directly says communication must explain both known facts and what could change.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v12",
+          "type": "mcq",
+          "passageId": "varc-p3",
+          "text": "The phrase 'disciplined openness' implies:",
+          "options": [
+            "openness without evidence.",
+            "a refusal to update conclusions.",
+            "transparency combined with methods and evidence-based revision.",
+            "doubt manufactured to delay action."
+          ],
+          "correctAnswer": "C",
+          "explanation": "The final paragraph defines authority through exposed methods, updated conclusions, and useful doubt.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Inference"
+        },
+        {
+          "id": "v13",
+          "type": "mcq",
+          "passageId": "varc-p4",
+          "text": "The main risk of agricultural uniformity, as described in the passage, is that it:",
+          "options": [
+            "makes crops impossible to harvest.",
+            "concentrates vulnerability to disease or climate shock.",
+            "prevents farmers from selling crops.",
+            "always produces lower yields."
+          ],
+          "correctAnswer": "B",
+          "explanation": "The author says uniform crops concentrate risk because one shock can affect the whole field.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v14",
+          "type": "mcq",
+          "passageId": "varc-p4",
+          "text": "Traditional seed systems are described as a form of memory because they:",
+          "options": [
+            "preserve experiments and adaptations from earlier seasons.",
+            "avoid all contact with markets.",
+            "produce the maximum yield every year.",
+            "depend entirely on machinery."
+          ],
+          "correctAnswer": "A",
+          "explanation": "The passage states mixed fields carry experiments from previous generations.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v15",
+          "type": "mcq",
+          "passageId": "varc-p4",
+          "text": "The author believes resilience may appear inefficient when judged only by:",
+          "options": [
+            "the number of seeds exchanged among farmers.",
+            "output per acre in a single season.",
+            "the ability to resist pests over time.",
+            "the diversity of crops in a field."
+          ],
+          "correctAnswer": "B",
+          "explanation": "The passage contrasts short-term output per acre with longer-term resilience.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v16",
+          "type": "mcq",
+          "passageId": "varc-p4",
+          "text": "Which option best captures the passage's conclusion?",
+          "options": [
+            "Scientific breeding should be abandoned.",
+            "Old methods should be romanticised because they are always superior.",
+            "Productivity and diversity should be designed to work together.",
+            "Uniform crops are never profitable."
+          ],
+          "correctAnswer": "C",
+          "explanation": "The conclusion asks for systems where productivity and diversity are not treated as enemies.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Reading Comprehension"
+        },
+        {
+          "id": "v17",
+          "type": "mcq",
+          "instruction": "Choose the option that best summarises the paragraph.",
+          "text": "Remote work has not eliminated offices; it has made their purpose more specific. Routine tasks can be done anywhere, but mentoring, trust-building, and conflict repair often benefit from shared physical time. The office is therefore less a default location than a tool to be used deliberately.",
+          "options": [
+            "Remote work is ineffective because all important work happens in offices.",
+            "The office remains useful when it is used intentionally for collaboration and trust-building.",
+            "Routine tasks are impossible outside the office.",
+            "Offices should be used every day to monitor employees."
+          ],
+          "correctAnswer": "B",
+          "explanation": "The paragraph argues for a deliberate, narrower role for offices.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Para Summary"
+        },
+        {
+          "id": "v18",
+          "type": "mcq",
+          "instruction": "Choose the option that best summarises the paragraph.",
+          "text": "Examinations are often criticised for rewarding memory, yet well-designed tests can measure judgement under constraints. The problem is not testing itself, but lazy testing that asks for recall while pretending to assess understanding.",
+          "options": [
+            "All examinations are harmful because they only reward memory.",
+            "Memory has no place in any assessment.",
+            "Testing can be valuable if it measures understanding rather than mere recall.",
+            "Judgement cannot be measured under time constraints."
+          ],
+          "correctAnswer": "C",
+          "explanation": "The paragraph distinguishes good testing from recall-heavy testing.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Para Summary"
+        },
+        {
+          "id": "v19",
+          "type": "mcq",
+          "instruction": "The four sentences below form a coherent paragraph. Choose the correct order.",
+          "text": "A. This makes the first wrong turn less costly.\nB. Learning a skill requires feedback soon after action.\nC. Over time, quick feedback encourages experimentation.\nD. When feedback is delayed, the learner repeats errors without noticing them.",
+          "options": [
+            "BDAC",
+            "BADC",
+            "DBAC",
+            "ADCB"
+          ],
+          "correctAnswer": "B",
+          "explanation": "B introduces feedback, D contrasts delayed feedback, A explains immediate correction, and C concludes the effect.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Para Jumble"
+        },
+        {
+          "id": "v20",
+          "type": "mcq",
+          "instruction": "The four sentences below form a coherent paragraph. Choose the correct order.",
+          "text": "A. The library became a place where attention could be protected.\nB. In that silence, difficult books became less intimidating.\nC. Noise followed students everywhere through their phones.\nD. So the school created one room where devices were left outside.",
+          "options": [
+            "CDAB",
+            "CADB",
+            "DCAB",
+            "ABCD"
+          ],
+          "correctAnswer": "A",
+          "explanation": "C states the problem, D gives the response, A names the result, and B extends it.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Para Jumble"
+        },
+        {
+          "id": "v21",
+          "type": "mcq",
+          "instruction": "Four sentences are given below. Three belong to one coherent paragraph. Choose the odd one out.",
+          "text": "A. A city park can reduce heat by replacing concrete with shade and soil.\nB. It can also create a shared public space for people who otherwise rarely meet.\nC. The price of imported steel rose sharply during the same period.\nD. Parks therefore serve both ecological and social functions.",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correctAnswer": "C",
+          "explanation": "A, B, and D discuss functions of parks; C is unrelated.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Odd Sentence"
+        },
+        {
+          "id": "v22",
+          "type": "mcq",
+          "instruction": "Choose the option that best completes the sentence.",
+          "text": "The historian's argument was persuasive not because it offered a new fact, but because it placed familiar facts in a more revealing _____.",
+          "options": [
+            "sequence",
+            "disguise",
+            "accident",
+            "contradiction"
+          ],
+          "correctAnswer": "A",
+          "explanation": "A more revealing sequence can make familiar facts persuasive.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Sentence Completion"
+        },
+        {
+          "id": "v23",
+          "type": "mcq",
+          "instruction": "Choose the option that best summarises the paragraph.",
+          "text": "Technology often promises to save attention by automating routine decisions. But when every tool sends alerts, recommendations, and reminders, the saved attention is spent managing the tools themselves. The challenge is not automation alone, but automation designed without restraint.",
+          "options": [
+            "Automation always increases attention because routine decisions disappear.",
+            "Technology should never send alerts or recommendations.",
+            "Attention is lost only because users lack discipline.",
+            "Automation helps only when it is restrained enough not to create new attention costs."
+          ],
+          "correctAnswer": "D",
+          "explanation": "The paragraph argues that automation can help only if it does not create new management burdens.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Para Summary"
+        },
+        {
+          "id": "v24",
+          "type": "mcq",
+          "instruction": "The four sentences below form a coherent paragraph. Choose the correct order.",
+          "text": "A. The result was a market that rewarded patience rather than speed.\nB. Customers returned because the maker remembered their earlier choices.\nC. Trust grew from repeated small interactions.\nD. The shopkeeper did not compete by lowering prices each week.",
+          "options": [
+            "DCBA",
+            "DBCA",
+            "CDAB",
+            "BCDA"
+          ],
+          "correctAnswer": "A",
+          "explanation": "D introduces the contrast, C explains trust, B illustrates it, and A concludes the market effect.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Para Jumble"
+        }
+      ]
+    },
+    {
+      "id": "dilr",
+      "name": "DILR",
+      "durationMinutes": 40,
+      "instruction": "Study the data given on the left and answer the question.",
+      "sets": [
+        {
+          "id": "dilr-s1",
+          "title": "Set 1: Store Sales",
+          "instruction": "Study the table and answer the questions.",
+          "text": "Four stores A, B, C, and D reported sales over three days.\n\nSales table:\nA: Mon 18, Tue 22, Wed 20\nB: Mon 24, Tue 20, Wed 16\nC: Mon 15, Tue 25, Wed 30\nD: Mon 20, Tue 18, Wed 22"
+        },
+        {
+          "id": "dilr-s2",
+          "title": "Set 2: Club Subscriptions",
+          "instruction": "Study the table and answer the questions.",
+          "text": "Three classes subscribed to Drama, Music, and Sports clubs.\n\nClass I: Drama 20, Music 25, Sports 15\nClass II: Drama 18, Music 20, Sports 12\nClass III: Drama 10, Music 22, Sports 8"
+        },
+        {
+          "id": "dilr-s3",
+          "title": "Set 3: Bus Routes",
+          "instruction": "Study the route data and answer the questions.",
+          "text": "Four buses travel from a hub to four towns. Distance, speed, and halt time are given below.\n\nBus A: Distance 120 km, speed 60 km/h, halt 10 min\nBus B: Distance 180 km, speed 45 km/h, halt 20 min\nBus C: Distance 150 km, speed 50 km/h, halt 15 min\nBus D: Distance 210 km, speed 70 km/h, halt 30 min\n\nTotal trip time = running time + halt time."
+        },
+        {
+          "id": "dilr-s4",
+          "title": "Set 4: League Table",
+          "instruction": "Study the league table and answer the questions.",
+          "text": "Four teams M, N, O, and P played 5 matches each. Points are awarded as 3 for a win, 1 for a draw, and 0 for a loss.\n\nM: Wins 3, Draws 1, Losses 1, Goals For 9, Goals Against 6\nN: Wins 2, Draws 2, Losses 1, Goals For 8, Goals Against 5\nO: Wins 2, Draws 1, Losses 2, Goals For 7, Goals Against 7\nP: Wins 1, Draws 2, Losses 2, Goals For 5, Goals Against 8"
+        }
+      ],
+      "questions": [
+        {
+          "id": "d1",
+          "type": "mcq",
+          "setId": "dilr-s1",
+          "text": "Which store had the highest total sales over the three days?",
+          "options": ["A", "B", "C", "D"],
+          "correctAnswer": "C",
+          "explanation": "Totals are A = 60, B = 60, C = 70, and D = 60.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Data Interpretation"
+        },
+        {
+          "id": "d2",
+          "type": "tita",
+          "setId": "dilr-s1",
+          "text": "How many stores had total sales of exactly 60?",
+          "correctAnswer": "3",
+          "explanation": "Stores A, B, and D each total 60.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Data Interpretation"
+        },
+        {
+          "id": "d3",
+          "type": "mcq",
+          "setId": "dilr-s1",
+          "text": "What was the total sales across all stores on Wednesday?",
+          "options": ["78", "82", "88", "94"],
+          "correctAnswer": "C",
+          "explanation": "Wednesday total = 20 + 16 + 30 + 22 = 88.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Data Interpretation"
+        },
+        {
+          "id": "d4",
+          "type": "mcq",
+          "setId": "dilr-s1",
+          "text": "What was Store C's average daily sales?",
+          "options": ["21.67", "22.33", "23.33", "25"],
+          "correctAnswer": "C",
+          "explanation": "Store C total is 70, so average = 70/3 = 23.33.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Data Interpretation"
+        },
+        {
+          "id": "d5",
+          "type": "mcq",
+          "setId": "dilr-s1",
+          "text": "Monday sales formed what percentage of total sales across all three days?",
+          "options": ["28.4%", "30.8%", "32.5%", "35.2%"],
+          "correctAnswer": "B",
+          "explanation": "Monday total is 77 and overall total is 250, so 77/250 = 30.8%.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Data Interpretation"
+        },
+        {
+          "id": "d6",
+          "type": "mcq",
+          "setId": "dilr-s2",
+          "text": "Which club had the highest total subscriptions?",
+          "options": ["Drama", "Music", "Sports", "Drama and Music tied"],
+          "correctAnswer": "B",
+          "explanation": "Drama total = 48, Music total = 67, Sports total = 35.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Tables"
+        },
+        {
+          "id": "d7",
+          "type": "mcq",
+          "setId": "dilr-s2",
+          "text": "Music subscriptions in Class II were what percentage of Class II's total subscriptions?",
+          "options": ["36%", "40%", "44%", "50%"],
+          "correctAnswer": "B",
+          "explanation": "Class II total is 50 and Music is 20, so 20/50 = 40%.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Tables"
+        },
+        {
+          "id": "d8",
+          "type": "tita",
+          "setId": "dilr-s2",
+          "text": "By how many subscriptions did Music exceed Drama overall?",
+          "correctAnswer": "19",
+          "explanation": "Music total 67 minus Drama total 48 = 19.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Tables"
+        },
+        {
+          "id": "d9",
+          "type": "mcq",
+          "setId": "dilr-s2",
+          "text": "What is the ratio of Sports subscriptions in Class I to Sports subscriptions in Class III?",
+          "options": ["15:8", "8:15", "3:2", "5:4"],
+          "correctAnswer": "A",
+          "explanation": "Sports subscriptions are 15 in Class I and 8 in Class III.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Tables"
+        },
+        {
+          "id": "d10",
+          "type": "tita",
+          "setId": "dilr-s2",
+          "text": "What is the total number of subscriptions across all clubs and classes?",
+          "correctAnswer": "150",
+          "explanation": "Class totals are 60, 50, and 40, for a total of 150.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Tables"
+        },
+        {
+          "id": "d11",
+          "type": "mcq",
+          "setId": "dilr-s3",
+          "text": "Which bus has the minimum total trip time?",
+          "options": ["A", "B", "C", "D"],
+          "correctAnswer": "A",
+          "explanation": "Total times are A = 130 min, B = 260 min, C = 195 min, D = 210 min.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Routes"
+        },
+        {
+          "id": "d12",
+          "type": "mcq",
+          "setId": "dilr-s3",
+          "text": "Which bus has the maximum total trip time?",
+          "options": ["A", "B", "C", "D"],
+          "correctAnswer": "B",
+          "explanation": "Bus B takes 180/45 = 4 hours plus 20 minutes, or 260 minutes.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Routes"
+        },
+        {
+          "id": "d13",
+          "type": "tita",
+          "setId": "dilr-s3",
+          "text": "What is Bus C's total trip time in minutes?",
+          "correctAnswer": "195",
+          "explanation": "Bus C running time is 150/50 = 3 hours = 180 minutes; adding 15 minutes gives 195.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Routes"
+        },
+        {
+          "id": "d14",
+          "type": "mcq",
+          "setId": "dilr-s3",
+          "text": "By how many minutes does Bus D's total trip time exceed Bus A's?",
+          "options": ["60", "70", "80", "90"],
+          "correctAnswer": "C",
+          "explanation": "Bus D takes 210 minutes and Bus A takes 130 minutes; difference = 80 minutes.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Routes"
+        },
+        {
+          "id": "d15",
+          "type": "mcq",
+          "setId": "dilr-s3",
+          "text": "What is the average running speed across all four trips, computed as total distance divided by total running time?",
+          "options": ["50 km/h", "55 km/h", "60 km/h", "65 km/h"],
+          "correctAnswer": "B",
+          "explanation": "Total distance is 660 km. Total running time is 12 hours. Average = 55 km/h.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Routes"
+        },
+        {
+          "id": "d16",
+          "type": "mcq",
+          "setId": "dilr-s4",
+          "text": "Which team had the highest points?",
+          "options": ["M", "N", "O", "P"],
+          "correctAnswer": "A",
+          "explanation": "Points are M = 10, N = 8, O = 7, P = 5.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Games and Tournaments"
+        },
+        {
+          "id": "d17",
+          "type": "tita",
+          "setId": "dilr-s4",
+          "text": "What is Team N's goal difference?",
+          "correctAnswer": "3",
+          "explanation": "Goal difference for N is 8 - 5 = 3.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Games and Tournaments"
+        },
+        {
+          "id": "d18",
+          "type": "tita",
+          "setId": "dilr-s4",
+          "text": "How many drawn matches were played in total?",
+          "correctAnswer": "3",
+          "explanation": "Total team draws are 1 + 2 + 1 + 2 = 6. Each drawn match counts for two teams, so matches = 3.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Games and Tournaments"
+        },
+        {
+          "id": "d19",
+          "type": "mcq",
+          "setId": "dilr-s4",
+          "text": "Which team had the worst goal difference?",
+          "options": ["M", "N", "O", "P"],
+          "correctAnswer": "D",
+          "explanation": "Goal differences are M = 3, N = 3, O = 0, P = -3.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Games and Tournaments"
+        },
+        {
+          "id": "d20",
+          "type": "mcq",
+          "setId": "dilr-s4",
+          "text": "What is the points gap between Team M and Team P?",
+          "options": ["3", "4", "5", "6"],
+          "correctAnswer": "C",
+          "explanation": "M has 10 points and P has 5 points, so the gap is 5.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Games and Tournaments"
+        }
+      ]
+    },
+    {
+      "id": "qa",
+      "name": "QA",
+      "durationMinutes": 40,
+      "instruction": "Solve the question and choose the best answer. For TITA questions, type the exact answer.",
+      "questions": [
+        {
+          "id": "q1",
+          "type": "mcq",
+          "text": "A shopkeeper marks an article 50% above cost price and gives successive discounts of 20% and 10%. What is the profit percentage?",
+          "options": ["6%", "8%", "10%", "12%"],
+          "correctAnswer": "B",
+          "explanation": "If cost is 100, marked price is 150. Selling price = 150 x 0.8 x 0.9 = 108, so profit is 8%.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Profit and Loss"
+        },
+        {
+          "id": "q2",
+          "type": "tita",
+          "text": "If x + 1/x = 5, what is x^2 + 1/x^2?",
+          "correctAnswer": "23",
+          "explanation": "(x + 1/x)^2 = x^2 + 2 + 1/x^2, so the required value is 25 - 2 = 23.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Algebra"
+        },
+        {
+          "id": "q3",
+          "type": "mcq",
+          "text": "An arithmetic progression has first term 3 and common difference 2. What is the sum of its first 20 terms?",
+          "options": ["400", "420", "440", "460"],
+          "correctAnswer": "C",
+          "explanation": "S20 = 20/2 x [2 x 3 + 19 x 2] = 10 x 44 = 440.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Progressions"
+        },
+        {
+          "id": "q4",
+          "type": "tita",
+          "text": "The HCF and LCM of two numbers are 12 and 180 respectively. If one number is 36, find the other number.",
+          "correctAnswer": "60",
+          "explanation": "Product of numbers = HCF x LCM = 2160. Other number = 2160/36 = 60.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Number System"
+        },
+        {
+          "id": "q5",
+          "type": "mcq",
+          "text": "A can finish a task in 12 days and B can finish it in 18 days. Working together, how many days will they take?",
+          "options": ["6.8", "7.2", "7.5", "8"],
+          "correctAnswer": "B",
+          "explanation": "Together they complete 1/12 + 1/18 = 5/36 of the work per day, so time = 36/5 = 7.2 days.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Time and Work"
+        },
+        {
+          "id": "q6",
+          "type": "mcq",
+          "text": "A person travels 60 km at 40 km/h and returns 60 km at 60 km/h. What is the average speed for the whole journey?",
+          "options": ["45 km/h", "48 km/h", "50 km/h", "52 km/h"],
+          "correctAnswer": "B",
+          "explanation": "Total distance is 120 km. Total time = 1.5 + 1 = 2.5 hours. Average speed = 48 km/h.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Time, Speed and Distance"
+        },
+        {
+          "id": "q7",
+          "type": "tita",
+          "text": "If the roots of x^2 - 7x + 12 = 0 are a and b, find ab.",
+          "correctAnswer": "12",
+          "explanation": "For x^2 - 7x + 12, product of roots is the constant term, 12.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Quadratic Equations"
+        },
+        {
+          "id": "q8",
+          "type": "mcq",
+          "text": "A triangle has sides 13, 14, and 15. What is its area?",
+          "options": ["72", "80", "84", "90"],
+          "correctAnswer": "C",
+          "explanation": "Using Heron's formula, s = 21 and area = sqrt(21 x 8 x 7 x 6) = 84.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Geometry"
+        },
+        {
+          "id": "q9",
+          "type": "mcq",
+          "text": "A box has 5 red balls and 3 blue balls. Two balls are drawn without replacement. What is the probability that both are red?",
+          "options": ["5/14", "3/8", "10/21", "1/2"],
+          "correctAnswer": "A",
+          "explanation": "Probability = C(5,2)/C(8,2) = 10/28 = 5/14.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Probability"
+        },
+        {
+          "id": "q10",
+          "type": "tita",
+          "text": "A 20 litre solution contains 30% alcohol. How many litres of water must be added to make it a 20% alcohol solution?",
+          "correctAnswer": "10",
+          "explanation": "Alcohol is 6 litres. If final concentration is 20%, total volume must be 30 litres, so add 10 litres water.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Mixtures"
+        },
+        {
+          "id": "q11",
+          "type": "mcq",
+          "text": "A sum of Rs. 12000 becomes Rs. 15600 in 3 years at simple interest. What is the annual rate of interest?",
+          "options": ["8%", "9%", "10%", "12%"],
+          "correctAnswer": "C",
+          "explanation": "Interest = 3600. Rate = 3600 x 100 / (12000 x 3) = 10%.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Simple Interest"
+        },
+        {
+          "id": "q12",
+          "type": "tita",
+          "text": "How many integer values of x satisfy |2x - 5| < 7?",
+          "correctAnswer": "7",
+          "explanation": "-7 < 2x - 5 < 7 gives -2 < x < 6. Integers are -1, 0, 1, 2, 3, 4, 5, so 7 values.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Inequalities"
+        },
+        {
+          "id": "q13",
+          "type": "mcq",
+          "text": "If the radius of a circle is increased by 10%, by what percentage does its circumference increase?",
+          "options": ["5%", "10%", "20%", "21%"],
+          "correctAnswer": "B",
+          "explanation": "Circumference is directly proportional to radius, so it increases by 10%.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Mensuration"
+        },
+        {
+          "id": "q14",
+          "type": "tita",
+          "text": "How many distinct arrangements are possible using all letters of the word BALLOON?",
+          "correctAnswer": "1260",
+          "explanation": "BALLOON has 7 letters with L repeated twice and O repeated twice. Arrangements = 7!/(2!2!) = 1260.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Permutation and Combination"
+        },
+        {
+          "id": "q15",
+          "type": "mcq",
+          "text": "For f(x) = x^2 + px + q, the remainder is 2 when divided by x - 1 and 6 when divided by x - 2. What is p + 2q?",
+          "options": ["0", "1", "2", "3"],
+          "correctAnswer": "B",
+          "explanation": "f(1)=2 gives p+q=1. f(2)=6 gives 2p+q=2. Hence p=1, q=0, and p+2q=1.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Polynomials"
+        },
+        {
+          "id": "q16",
+          "type": "mcq",
+          "text": "If A:B = 3:5 and B:C = 4:7, what is A:C?",
+          "options": ["12:35", "15:28", "3:7", "5:7"],
+          "correctAnswer": "A",
+          "explanation": "Make B common: A:B = 12:20 and B:C = 20:35, so A:C = 12:35.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Ratio"
+        },
+        {
+          "id": "q17",
+          "type": "mcq",
+          "text": "A boat's speed in still water is 10 km/h and the stream speed is 2 km/h. It takes 5 hours to go to a point and return. What is the one-way distance?",
+          "options": ["20 km", "22 km", "24 km", "30 km"],
+          "correctAnswer": "C",
+          "explanation": "Upstream speed is 8 and downstream speed is 12. d/8 + d/12 = 5 gives d = 24 km.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Boats and Streams"
+        },
+        {
+          "id": "q18",
+          "type": "tita",
+          "text": "If 72 = 2^a x 3^b, find a + b.",
+          "correctAnswer": "5",
+          "explanation": "72 = 8 x 9 = 2^3 x 3^2, so a + b = 5.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Number System"
+        },
+        {
+          "id": "q19",
+          "type": "mcq",
+          "text": "What is the slope of the line passing through (2, 3) and (6, 11)?",
+          "options": ["1", "2", "3", "4"],
+          "correctAnswer": "B",
+          "explanation": "Slope = (11 - 3)/(6 - 2) = 8/4 = 2.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Coordinate Geometry"
+        },
+        {
+          "id": "q20",
+          "type": "tita",
+          "text": "The diagonal of a square is 10. What is its area?",
+          "correctAnswer": "50",
+          "explanation": "For a square, area = diagonal^2/2 = 100/2 = 50.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Geometry"
+        },
+        {
+          "id": "q21",
+          "type": "mcq",
+          "text": "The average of five numbers is 18. When a sixth number is added, the average becomes 20. What is the sixth number?",
+          "options": ["28", "30", "32", "36"],
+          "correctAnswer": "B",
+          "explanation": "Sum of five numbers = 90. Sum of six numbers = 120. Sixth number = 30.",
+          "marks": 3,
+          "negativeMarks": -1,
+          "topic": "Averages"
+        },
+        {
+          "id": "q22",
+          "type": "tita",
+          "text": "Find the smallest positive integer n such that n! is divisible by 1000.",
+          "correctAnswer": "15",
+          "explanation": "1000 = 2^3 x 5^3. The limiting factor is three factors of 5, first available in 15!, so n = 15.",
+          "marks": 3,
+          "negativeMarks": 0,
+          "topic": "Factorials"
+        }
+      ]
+    }
+  ]
+}

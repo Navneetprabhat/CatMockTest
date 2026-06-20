@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CAT Mock Lab</title>
+    <link rel="stylesheet" href="./Mocktest/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">CM</div>
+          <div>
+            <strong>CAT Mock Lab</strong>
+            <span>Focused mocks. Clear review.</span>
+          </div>
+        </div>
+
+        <nav class="nav-list" aria-label="Primary">
+          <button class="nav-item active" data-view="dashboard">Practice</button>
+          <button class="nav-item" data-view="upload">Upload</button>
+          <button class="nav-item" data-view="history">History</button>
+        </nav>
+      </header>
+
+      <main class="main">
+        <section class="view active" id="dashboard-view">
+          <div class="page-header">
+            <div>
+              <span class="eyebrow">Practice desk</span>
+              <h1>Start fast. Stay focused. Review honestly.</h1>
+              <p>Pick one mock, answer without distractions, then review score, timing, confidence, and mistakes in one place.</p>
+            </div>
+            <button class="secondary-action" data-view-target="upload">Upload JSON</button>
+          </div>
+
+          <div class="metrics-grid">
+            <article class="metric-card">
+              <span>Attempts</span>
+              <strong id="metric-attempts">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>Best score</span>
+              <strong id="metric-best">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>Avg time/question</span>
+              <strong id="metric-time">0s</strong>
+            </article>
+            <article class="metric-card">
+              <span>Confidence used</span>
+              <strong id="metric-confidence">0%</strong>
+            </article>
+          </div>
+
+          <div class="focus-grid">
+            <section class="content-band">
+              <div class="section-heading">
+                <div>
+                  <span class="eyebrow">Next action</span>
+                  <h2>Take the sample mock</h2>
+                </div>
+              </div>
+              <div id="featured-test" class="test-list"></div>
+            </section>
+
+            <section class="content-band quiet-band">
+              <div class="section-heading">
+                <div>
+                  <span class="eyebrow">Workflow</span>
+                  <h2>Simple loop</h2>
+                </div>
+              </div>
+              <ol class="focus-steps">
+                <li><strong>Attempt</strong><span>Use section timers and mark only what needs review.</span></li>
+                <li><strong>Reflect</strong><span>Check accuracy, time, and confidence mismatches.</span></li>
+                <li><strong>Repeat</strong><span>Upload a tighter custom set for the next session.</span></li>
+              </ol>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="library-view">
+          <div class="page-header compact">
+            <div>
+              <span class="eyebrow">Available mocks</span>
+              <h1>Choose one test.</h1>
+            </div>
+          </div>
+          <div id="sample-tests" class="test-grid"></div>
+        </section>
+
+        <section class="view" id="upload-view">
+          <div class="page-header compact">
+            <div>
+              <span class="eyebrow">Custom practice</span>
+              <h1>Upload a complete JSON mock.</h1>
+              <p>Use a focused file with sections, questions, answers, marks, and timers. The file stays in this browser.</p>
+            </div>
+          </div>
+
+          <div class="upload-layout">
+            <label class="upload-drop">
+              <input id="json-upload" type="file" accept="application/json,.json" />
+              <span class="upload-icon">JSON</span>
+              <strong>Choose file</strong>
+              <small>Validation appears before the test can start.</small>
+            </label>
+            <div class="section-heading">
+              <h2>Validation</h2>
+              <button id="load-template" class="ghost-action">Show sample format</button>
+            </div>
+            <div id="validation-output" class="validation-output empty-state">No file selected yet.</div>
+          </div>
+        </section>
+
+        <section class="view" id="history-view">
+          <div class="page-header compact">
+            <div>
+              <span class="eyebrow">Past attempts</span>
+              <h1>Review what happened.</h1>
+            </div>
+          </div>
+          <div id="history-list" class="history-list"></div>
+        </section>
+
+        <section class="view test-mode cat-mode" id="attempt-view" aria-live="polite">
+          <div class="cat-frame">
+            <div class="cat-main">
+              <div class="cat-topline">
+                <div class="section-tabs" id="section-tabs"></div>
+                <div class="cat-help">?</div>
+              </div>
+
+              <div class="cat-section-bar">
+                <div>
+                  <strong>Sections</strong>
+                  <span class="section-chip active" id="section-name">VARC</span>
+                </div>
+                <div class="timer-cluster">
+                  <span>Time Left :</span>
+                  <strong id="section-timer">00:00</strong>
+                  <small>Question: <b id="question-timer">0s</b></small>
+                </div>
+              </div>
+
+              <div class="marks-strip" id="marks-line">Marks for correct answer: 3 | Negative Marks: 1</div>
+
+              <div class="test-layout">
+                <section class="passage-panel" id="passage-panel">
+                  <p class="instruction-copy" id="question-instruction"></p>
+                  <h2 id="passage-title"></h2>
+                  <div id="passage-text" class="passage-text"></div>
+                </section>
+
+                <section class="question-panel">
+                  <div class="question-meta">
+                    <strong id="question-position">Question No. 1</strong>
+                    <span id="question-type">MCQ</span>
+                  </div>
+                  <h2 id="question-text"></h2>
+                  <div id="option-list" class="option-list"></div>
+                  <div id="tita-box" class="tita-box hidden">
+                    <label for="tita-answer">Type in your answer</label>
+                    <input id="tita-answer" type="text" inputmode="decimal" placeholder="Enter answer" />
+                  </div>
+                  <div id="confidence-panel" class="hidden">
+                    <button id="clear-confidence" type="button">Clear confidence</button>
+                    <div id="confidence-controls"></div>
+                    <div id="confidence-total">Total: 0%</div>
+                  </div>
+                </section>
+              </div>
+
+              <div class="cat-footer">
+                <div class="question-actions">
+                  <button id="toggle-review" class="secondary-action">Mark for Review &amp; Next</button>
+                  <button id="clear-response" class="secondary-action">Clear Response</button>
+                </div>
+                <button id="save-next" class="primary-action">Save &amp; Next</button>
+              </div>
+            </div>
+
+            <aside class="palette-panel">
+              <div class="status-grid">
+                <span><b class="status-badge answered" id="answered-count">0</b>Answered</span>
+                <span><b class="status-badge not-answered" id="not-answered-count">0</b>Not Answered</span>
+                <span><b class="status-badge not-visited" id="not-visited-count">0</b>Not Visited</span>
+                <span><b class="status-badge review" id="review-count">0</b>Marked for Review</span>
+                <span class="wide"><b class="status-badge answered-review" id="answered-review-count">0</b>Answered &amp; Marked for Review</span>
+              </div>
+              <h2 id="palette-section-title">VARC</h2>
+              <strong class="palette-title">Choose a Question</strong>
+              <div id="question-palette" class="question-palette"></div>
+              <div class="palette-actions">
+                <button id="next-section" class="secondary-action">Next Section</button>
+                <button id="submit-test" class="primary-action">Submit</button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="results-view">
+          <div class="page-header compact">
+            <div>
+              <span class="eyebrow">Analysis</span>
+              <h1 id="result-title">Result</h1>
+              <p id="result-subtitle"></p>
+            </div>
+            <button id="download-report" class="primary-action">Download JSON report</button>
+          </div>
+          <div id="result-summary" class="metrics-grid"></div>
+          <div class="analysis-layout">
+            <section class="content-band">
+              <div class="section-heading">
+                <h2>Question review</h2>
+              </div>
+              <div id="question-review" class="review-list"></div>
+            </section>
+            <aside class="insight-panel">
+              <h2>Insights</h2>
+              <div id="insight-list"></div>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <script src="./Mocktest/app.js"></script>
+  </body>
+</html>
