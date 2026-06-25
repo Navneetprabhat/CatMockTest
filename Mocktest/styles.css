@@ -132,6 +132,307 @@ body.in-attempt .main {
   display: block;
 }
 
+.landing-hero {
+  position: relative;
+  width: 100vw;
+  min-height: clamp(560px, calc(100svh - 130px), 760px);
+  margin: -26px 0 28px calc(50% - 50vw);
+  overflow: hidden;
+  display: grid;
+  align-items: center;
+  padding: 64px max(22px, calc((100vw - 1180px) / 2)) 42px;
+  color: #112126;
+  background: #eef5f2;
+  border-bottom: 1px solid #bdd5d0;
+}
+
+.landing-visual {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mock-window {
+  position: absolute;
+  right: max(16px, calc((100vw - 1180px) / 2));
+  top: 64px;
+  width: min(680px, 55vw);
+  min-height: 440px;
+  border: 1px solid rgba(17, 33, 38, 0.24);
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(27, 49, 56, 0.18);
+  transform: rotate(-1.5deg);
+}
+
+.mock-toolbar {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  border-bottom: 1px solid #c8d8d4;
+  background: #f8fbfa;
+}
+
+.mock-toolbar span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #d94716;
+}
+
+.mock-toolbar span:nth-child(2) {
+  background: #efb03c;
+}
+
+.mock-toolbar span:nth-child(3) {
+  background: #5ba83d;
+}
+
+.mock-toolbar strong {
+  margin-left: 8px;
+  color: #31535a;
+  font-size: 14px;
+}
+
+.mock-test-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px;
+  gap: 0;
+}
+
+.mock-passage,
+.mock-question {
+  min-height: 314px;
+  padding: 22px;
+}
+
+.mock-passage {
+  border-right: 1px solid #d7e0dd;
+}
+
+.mock-kicker {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--cat-blue-dark);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.mock-passage b,
+.mock-passage p,
+.mock-question h2 {
+  display: block;
+  border-radius: 3px;
+  background: #d8e5e1;
+}
+
+.mock-passage b {
+  width: 70%;
+  height: 20px;
+  margin-bottom: 22px;
+}
+
+.mock-passage p {
+  width: 100%;
+  height: 12px;
+  margin: 0 0 12px;
+}
+
+.mock-passage p:nth-child(4) {
+  width: 86%;
+}
+
+.mock-passage p:nth-child(5) {
+  width: 74%;
+}
+
+.mock-question {
+  background: #fbf7ef;
+}
+
+.mock-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 24px;
+  color: #31535a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.mock-question h2 {
+  width: 92%;
+  height: 22px;
+  margin: 0 0 24px;
+  background: #e5d8be;
+}
+
+.mock-question ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mock-question li {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid #cdbf9e;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #5a4923;
+  font-weight: 700;
+}
+
+.mock-question li.selected {
+  border-color: var(--cat-blue-dark);
+  color: #ffffff;
+  background: var(--cat-blue);
+}
+
+.mock-palette {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(8, 42px);
+  gap: 10px;
+  padding: 16px 22px 22px;
+  border-top: 1px solid #d7e0dd;
+  background: var(--cat-light-blue);
+}
+
+.mock-palette span {
+  min-height: 38px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #a7a7a7;
+  border-radius: 4px;
+  background: #eeeeee;
+  color: #222222;
+  font-weight: 700;
+}
+
+.mock-palette .answered {
+  color: #ffffff;
+  background: var(--cat-green);
+  border-color: var(--cat-green-dark);
+}
+
+.mock-palette .review {
+  color: #ffffff;
+  background: var(--cat-purple);
+  border-color: #68418c;
+  border-radius: 999px;
+}
+
+.mock-palette .current {
+  color: #ffffff;
+  background: var(--cat-orange);
+  border-color: var(--cat-orange-dark);
+}
+
+.landing-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+}
+
+.landing-copy h1 {
+  margin: 8px 0 16px;
+  font-size: 64px;
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.landing-copy p {
+  margin: 0;
+  max-width: 510px;
+  color: #31535a;
+  font-size: 19px;
+  line-height: 1.5;
+}
+
+.landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.landing-actions .primary-action,
+.landing-actions .secondary-action {
+  min-width: 142px;
+}
+
+.landing-stats {
+  position: absolute;
+  left: max(22px, calc((100vw - 1180px) / 2));
+  bottom: 28px;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 700px;
+}
+
+.landing-stats span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid #bdd5d0;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #31535a;
+  font-size: 14px;
+}
+
+.landing-stats strong {
+  color: #112126;
+  font-size: 18px;
+}
+
+.landing-proof {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+  padding: 8px 0 34px;
+}
+
+.landing-proof section {
+  padding-top: 18px;
+  border-top: 3px solid var(--cat-blue);
+}
+
+.landing-proof section:nth-child(2) {
+  border-color: var(--cat-orange);
+}
+
+.landing-proof section:nth-child(3) {
+  border-color: var(--cat-green-dark);
+}
+
+.landing-proof h2 {
+  margin: 6px 0 8px;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.landing-proof p {
+  margin: 0;
+  color: var(--cat-muted);
+  line-height: 1.5;
+}
+
 .page-header {
   display: flex;
   align-items: end;
@@ -1028,6 +1329,31 @@ body.in-attempt .cat-mode .cat-frame {
     flex-direction: column;
   }
 
+  .landing-hero {
+    min-height: auto;
+    padding-top: 46px;
+    padding-bottom: 34px;
+  }
+
+  .mock-window {
+    right: -220px;
+    top: 74px;
+    width: 620px;
+    opacity: 0.28;
+  }
+
+  .landing-stats {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    margin-top: 32px;
+  }
+
+  .landing-proof {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
   .nav-item {
     flex: 1;
   }
@@ -1085,6 +1411,33 @@ body.in-attempt .cat-mode .cat-frame {
   .main {
     width: min(100% - 20px, 1180px);
     padding-top: 18px;
+  }
+
+  .landing-hero {
+    margin-top: -18px;
+    padding: 34px 16px 28px;
+  }
+
+  .mock-window {
+    display: none;
+  }
+
+  .landing-copy h1 {
+    font-size: 44px;
+  }
+
+  .landing-copy p {
+    font-size: 16px;
+  }
+
+  .landing-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .landing-stats {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
   .page-header h1 {

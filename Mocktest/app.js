@@ -112,7 +112,7 @@ const samplePaperPaths = [
 ];
 
 const state = {
-  activeView: "dashboard",
+  activeView: "landing",
   uploadedTests: [],
   attempts: JSON.parse(localStorage.getItem("catMockAttempts") || "[]"),
   currentAttempt: null,
